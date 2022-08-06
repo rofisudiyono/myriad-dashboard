@@ -1,8 +1,9 @@
 import { List } from "@mui/material";
+import Cookies from "js-cookie";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "../../../../public/icons";
 import { Navigation } from "../../../navigations";
 import ListSidebar from "../../atoms/ListSidebar";
@@ -11,21 +12,31 @@ const Siderbar: NextPage = () => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const [selectedListItemIndex, setSelectedListItemIndex] = useState<number>(0);
-  const [selectedSubListItemIndex, setSelectedSubListItemIndex] = useState<
-    number | undefined
-  >(undefined);
+  const [selectedSubListItemIndex, setSelectedSubListItemIndex] =
+    useState<number>(0);
 
   const handleListItemClick = (item: any, index: number) => {
     router.push(item.link);
-    setOpen(true);
+    setOpen(selectedListItemIndex === index ? !open : true);
     setSelectedListItemIndex(index);
-    setSelectedSubListItemIndex(undefined);
+    setSelectedSubListItemIndex(0);
+    Cookies.set("active_menu", index.toString());
+    Cookies.set("active_sub_menu", "0");
   };
 
   const handleSubItemClick = (item: any, index: number) => {
+    Cookies.set("active_sub_menu", index.toString());
     router.push(item.link);
     setSelectedSubListItemIndex(index);
   };
+
+  useEffect(() => {
+    if (!Cookies.get("active_menu")) return;
+    else {
+      setSelectedListItemIndex(parseInt(Cookies.get("active_menu")!));
+      setSelectedSubListItemIndex(parseInt(Cookies.get("active_sub_menu")!));
+    }
+  });
 
   return (
     <>

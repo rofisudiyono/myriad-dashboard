@@ -1,4 +1,5 @@
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
@@ -11,16 +12,13 @@ import {
   DataResponseUserReportedInterface,
   ReportType,
   ReportTypeCategoryMapper,
-  ResponseUserReported,
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
 import { colors } from "../../../utils";
+import { dateFormatter } from "../../../utils/dateFormatter";
 
 export default function PostResponded() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
-  const [dataPostResponded, setDataPostResponded] =
-    useState<ResponseUserReported>();
   const [userSelected, setUserSelected] =
     useState<DataResponseUserReportedInterface>();
   const [sortingDate, setSortingDate] = useState("DESC");
@@ -47,11 +45,21 @@ export default function PostResponded() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      cell: (value) => (
+        <Typography fontSize={14}>
+          {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
+        </Typography>
+      ),
     },
 
     {
       accessorKey: "updatedAt",
       header: "Respond date",
+      cell: (value) => (
+        <Typography fontSize={14}>
+          {dateFormatter(new Date(value.row.original.updatedAt), "dd/MM/yy")}
+        </Typography>
+      ),
     },
     {
       accessorKey: "totalReported",
@@ -135,67 +143,67 @@ export default function PostResponded() {
     setIsShowModalRespond(true);
   };
 
-  const getAllData = async () => {
-    const filter = JSON.stringify({
-      where: {
-        status:
-          sortingPostStatus === "all"
-            ? { inq: ["ignored", "removed"] }
-            : sortingPostStatus === "ignored"
-            ? "ignored"
-            : "removed",
-        referenceType:
-          sortingPostType === "all"
-            ? { inq: ["post", "comment"] }
-            : sortingPostType === "comment"
-            ? "comment"
-            : "post",
-      },
-      order: [`updatedAt ${sortingDate}`],
-    });
-    setIsLoading(true);
-    const response = await getAllUser({ pageNumber, filter });
-    setIsLoading(false);
-    if (response) {
-      setDataPostResponded(response);
+  const filter = JSON.stringify({
+    where: {
+      status:
+        sortingPostStatus === "all"
+          ? { inq: ["ignored", "removed"] }
+          : sortingPostStatus === "ignored"
+          ? "ignored"
+          : "removed",
+      referenceType:
+        sortingPostType === "all"
+          ? { inq: ["post", "comment"] }
+          : sortingPostType === "comment"
+          ? "comment"
+          : "post",
+    },
+    order: [`updatedAt ${sortingDate}`],
+  });
+
+  const {
+    refetch: refetchingGetAllResponded,
+    isFetching,
+    data: dataPostResponded,
+  } = useQuery(
+    ["/getAllPostResponded"],
+    () => getAllUser({ pageNumber, filter }),
+    {
+      enabled: false,
     }
-  };
+  );
 
   const handleRestore = async () => {
-    const response = await deleteUser({ reportId: userSelected?.id! });
+    const response = await mutateDeleteUser({ reportId: userSelected?.id! });
     if (response) {
       setIsShowModalRespond(false);
-      getAllData();
+      refetchingGetAllResponded();
     } else {
       setIsShowModalRespond(false);
-      getAllData();
+      refetchingGetAllResponded();
     }
   };
 
+  const { mutateAsync: mutateDeleteUser, isLoading } = useMutation(deleteUser);
+
   useEffect(() => {
-    getAllData();
-  }, [sortingDate, sortingPostType, sortingPostStatus]);
+    refetchingGetAllResponded();
+  }, [sortingDate, sortingPostType, sortingPostStatus, pageNumber]);
 
   return (
     <div>
       <div className="mb-[5px]">
         <Typography fontWeight={600} fontSize={18}>
-          Reported User
+          Responded User
         </Typography>
       </div>
       <Typography fontSize={14} fontWeight={400} color={"#757575"}>
-        {dataPostResponded?.data.toString().length ?? "0"} Reports
+        {dataPostResponded?.meta.totalItemCount ?? "0"} Reports Reports
       </Typography>
       <div className="my-6 flex">
-        <DropdownFilter
-          label="Report Date"
-          data={dataFilter ?? []}
-          value={sortingDate}
-          onChange={(event: any) => setSortingDate(event.target.value)}
-        />
-        <div className="px-4">
+        <div className="pr-4">
           <DropdownFilter
-            label="Respond date"
+            label="Report date"
             data={dataFilter ?? []}
             value={sortingDate}
             onChange={(event: any) => setSortingDate(event.target.value)}
@@ -217,11 +225,16 @@ export default function PostResponded() {
         </div>
       </div>
       <div className="">
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <Table data={dataPostResponded?.data ?? []} columns={columns} />
-        )}
+        <Table
+          isFetching={isFetching}
+          data={dataPostResponded?.data ?? []}
+          columns={columns}
+          meta={dataPostResponded?.meta ?? []}
+          onClickNext={() => setPageNumber(dataPostResponded?.meta.nextPage!)}
+          onClickPrevios={() =>
+            setPageNumber(dataPostResponded?.meta.currentPage! - 1)
+          }
+        />
       </div>
       <Modal
         open={isShowModalRespond}

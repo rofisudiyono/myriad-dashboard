@@ -1,4 +1,5 @@
 import { Backdrop, Button, CircularProgress, Typography } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
@@ -12,19 +13,22 @@ import {
   DataResponseUserReportedInterface,
   ReportType,
   ReportTypeCategoryMapper,
-  ResponseUserReported,
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
 import { colors } from "../../../utils";
+import { dateFormatter } from "../../../utils/dateFormatter";
 
 export default function UserReported() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
-  const [dataUserReported, setDataUserReported] =
-    useState<ResponseUserReported>();
   const [userSelected, setUserSelected] =
     useState<DataResponseUserReportedInterface>();
   const [sortingDate, setSortingDate] = useState("ASC");
+  const [pageNumber, setPageNumber] = useState<number>(1);
+
+  const filter = JSON.stringify({
+    where: { status: "pending", referenceType: "user" },
+    order: [`createdAt ${sortingDate}`],
+  });
 
   const translationText = (reportType: ReportType) => {
     return ReportTypeCategoryMapper[reportType];
@@ -45,6 +49,11 @@ export default function UserReported() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      cell: (value) => (
+        <Typography fontSize={14}>
+          {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
+        </Typography>
+      ),
     },
     {
       accessorKey: "totalReported",
@@ -81,7 +90,6 @@ export default function UserReported() {
       title: "Olders",
     },
   ];
-  const pageNumber = 1;
 
   const handleRespond = (value: DataResponseUserReportedInterface) => {
     setUserSelected(value);
@@ -90,48 +98,46 @@ export default function UserReported() {
 
   const handleIgnore = async () => {
     const status = "ignored";
-    const response = await updateUserStatus({
+    const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
-      getAllData();
+      refetchingGetAllUser();
       setIsShowModalRespond(false);
     }
   };
 
   const handleBanned = async () => {
     const status = "removed";
-    const response = await updateUserStatus({
+    const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
-      getAllData();
+      refetchingGetAllUser();
       setIsShowModalRespond(false);
     }
   };
 
-  const getAllData = async () => {
-    const filter = JSON.stringify({
-      where: { status: "pending", referenceType: "user" },
-      order: [`createdAt ${sortingDate}`],
-    });
-    setIsLoading(true);
-    const response = await getAllUser({ pageNumber, filter });
-    setIsLoading(false);
-    if (response) {
-      setDataUserReported(response);
-    }
-  };
+  const {
+    refetch: refetchingGetAllUser,
+    isFetching,
+    data: dataUserReported,
+  } = useQuery(["/getAllUser"], () => getAllUser({ pageNumber, filter }), {
+    enabled: false,
+  });
+
+  const { mutateAsync: mutateUpdateUserStatus, isLoading } =
+    useMutation(updateUserStatus);
 
   useEffect(() => {
-    getAllData();
-  }, [sortingDate]);
+    refetchingGetAllUser();
+  }, [sortingDate, pageNumber]);
 
   return (
     <div>
@@ -152,7 +158,16 @@ export default function UserReported() {
         />
       </div>
       <div className="">
-        <Table data={dataUserReported?.data ?? []} columns={columns} />
+        <Table
+          isFetching={isFetching}
+          data={dataUserReported?.data ?? []}
+          columns={columns}
+          meta={dataUserReported?.meta ?? []}
+          onClickNext={() => setPageNumber(dataUserReported?.meta.nextPage!)}
+          onClickPrevios={() =>
+            setPageNumber(dataUserReported?.meta.currentPage! - 1)
+          }
+        />
       </div>
       <Modal
         open={isShowModalRespond}
