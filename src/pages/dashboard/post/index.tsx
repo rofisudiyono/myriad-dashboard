@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
@@ -6,7 +6,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
 import { getAllUser, updateUserStatus } from "../../../api/users";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
-import ButtonOutline from "../../../components/atoms/Button";
+import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
 import Table from "../../../components/organisms/Table";
 import {
@@ -76,9 +76,9 @@ export default function PostResported() {
       accessorKey: "id",
       header: "Action",
       cell: (value) => (
-        <ButtonOutline
+        <Button
           onClick={() => handleRespond(value.row.original)}
-          title="Respond"
+          label="Respond"
         />
       ),
     },
@@ -251,33 +251,10 @@ export default function PostResported() {
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
-            <Button
-              fullWidth
-              onClick={handleIgnore}
-              variant="outlined"
-              style={{
-                borderRadius: 20,
-                color: "black",
-                borderColor: "#FFD24D",
-                textTransform: "capitalize",
-              }}
-            >
-              Ignore
-            </Button>
+            <Button isFullWidth onClick={handleIgnore} label="Ignore" />
           </div>
           <div className="flex-1">
-            <Button
-              onClick={handleBanned}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                color: "white",
-                textTransform: "capitalize",
-              }}
-              fullWidth
-            >
-              Remove
-            </Button>
+            <Button isFullWidth onClick={handleIgnore} primary label="Remove" />
           </div>
         </div>
       </Modal>

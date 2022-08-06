@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
@@ -6,11 +6,11 @@ import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
 import { deleteUser, getAllUser } from "../../../api/users";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
+import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
 import Table from "../../../components/organisms/Table";
 import { DataResponseUserReportedInterface } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
-import { colors } from "../../../utils";
 import { dateFormatter } from "../../../utils/dateFormatter";
 
 export default function UserResponded() {
@@ -59,22 +59,10 @@ export default function UserResponded() {
       header: "Action",
       cell: (value) => (
         <Button
-          disabled={value.row.original.status === "ignored"}
+          disable={value.row.original.status === "ignored"}
           onClick={() => handleRespond(value.row.original)}
-          variant="outlined"
-          style={{
-            backgroundColor:
-              value.row.original.status === "ignored" ? "#EDEDED" : "white",
-            borderRadius: 20,
-            color:
-              value.row.original.status === "ignored" ? "#C2C2C2" : "black",
-            borderColor:
-              value.row.original.status === "ignored" ? "#C2C2C2" : "#FFD24D",
-            textTransform: "capitalize",
-          }}
-        >
-          Respond
-        </Button>
+          label="Respond"
+        />
       ),
     },
   ];
@@ -233,32 +221,18 @@ export default function UserResponded() {
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
             <Button
-              fullWidth
+              isFullWidth
               onClick={() => setIsShowModalRespond(false)}
-              variant="outlined"
-              style={{
-                borderRadius: 20,
-                color: "black",
-                borderColor: "#FFD24D",
-                textTransform: "capitalize",
-              }}
-            >
-              Cancel
-            </Button>
+              label="Cancel"
+            />
           </div>
           <div className="flex-1">
             <Button
+              isFullWidth
               onClick={handleRestore}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                color: "white",
-                textTransform: "capitalize",
-              }}
-              fullWidth
-            >
-              Restore
-            </Button>
+              primary
+              label="Restore"
+            />
           </div>
         </div>
       </Modal>

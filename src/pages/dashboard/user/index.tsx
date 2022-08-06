@@ -6,7 +6,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
 import { getAllUser, updateUserStatus } from "../../../api/users";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
-import ButtonOutline from "../../../components/atoms/Button";
+import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
 import Table from "../../../components/organisms/Table";
 import {
@@ -72,7 +72,7 @@ export default function UserReported() {
       accessorKey: "id",
       header: "Action",
       cell: (value) => (
-        <ButtonOutline
+        <Button
           onClick={() => handleRespond(value.row.original)}
           title="Respond"
         />
