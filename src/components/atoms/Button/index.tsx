@@ -2,9 +2,9 @@ import { Button as ButtonMui } from "@mui/material";
 import { colors } from "../../../utils";
 
 interface ButtonOutlineInterface {
-  primary?: boolean;
   onClick: () => void;
   label: string;
+  primary?: boolean;
   isFullWidth?: boolean;
   disable?: boolean;
 }
@@ -20,7 +20,7 @@ const Button = ({
   if (primary) {
     return (
       <ButtonMui
-        onClick={onClick}
+        onClick={disable ? undefined : onClick}
         style={{
           backgroundColor: colors.primary,
           borderRadius: 20,
@@ -36,7 +36,7 @@ const Button = ({
   }
   return (
     <ButtonMui
-      onClick={onClick}
+      onClick={disable ? undefined : onClick}
       variant="outlined"
       style={{
         backgroundColor: disable ? "#EDEDED" : "white",

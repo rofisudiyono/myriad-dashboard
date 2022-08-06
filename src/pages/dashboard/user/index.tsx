@@ -1,4 +1,4 @@
-import { Backdrop, Button, CircularProgress, Typography } from "@mui/material";
+import { Backdrop, CircularProgress, Typography } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
@@ -15,7 +15,6 @@ import {
   ReportTypeCategoryMapper,
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
-import { colors } from "../../../utils";
 import { dateFormatter } from "../../../utils/dateFormatter";
 
 export default function UserReported() {
@@ -74,7 +73,7 @@ export default function UserReported() {
       cell: (value) => (
         <Button
           onClick={() => handleRespond(value.row.original)}
-          title="Respond"
+          label="Respond"
         />
       ),
     },
@@ -242,33 +241,10 @@ export default function UserReported() {
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
-            <Button
-              fullWidth
-              onClick={() => handleIgnore()}
-              variant="outlined"
-              style={{
-                borderRadius: 20,
-                color: "black",
-                borderColor: "#FFD24D",
-                textTransform: "capitalize",
-              }}
-            >
-              Ignore
-            </Button>
+            <Button isFullWidth onClick={() => handleIgnore()} label="Ignore" />
           </div>
           <div className="flex-1">
-            <Button
-              onClick={() => handleBanned()}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                color: "white",
-                textTransform: "capitalize",
-              }}
-              fullWidth
-            >
-              Banned
-            </Button>
+            <Button isFullWidth onClick={handleBanned} primary label="Banned" />
           </div>
         </div>
       </Modal>

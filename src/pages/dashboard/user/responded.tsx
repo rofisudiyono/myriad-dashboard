@@ -196,12 +196,9 @@ export default function UserResponded() {
               <div className="mb-[24px]">
                 <div className="flex justify-between">
                   <AvatarWithName
-                    image={
-                      userSelected?.reportedDetail.user
-                        .profilePictureURL as string
-                    }
-                    name={item.reportedBy as string}
-                    desc={item.id as string}
+                    image={userSelected?.reportedDetail.user.profilePictureURL!}
+                    name={item.reportedBy!}
+                    desc={item.id!}
                   />
                   <Typography fontSize={12} color={"#616161"}>
                     16/07/22
