@@ -8,7 +8,9 @@ import IcOpenUrl from "./IcOpenUrl.svg";
 import IcPost from "./IcPost.svg";
 import IcUser from "./IcUser.svg";
 import Logo from "./Logo.svg";
+import FavIcon from "./myriad-icon.png";
 export {
+  FavIcon,
   IcClosePurple,
   Logo,
   IcDasboard,

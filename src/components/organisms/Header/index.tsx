@@ -1,4 +1,4 @@
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Button, Typography } from "@mui/material";
 import Image from "next/image";
 import { IcDropdownPrimary, IcNotification } from "../../../../public/icons";
 
@@ -6,39 +6,80 @@ const Header = ({ title }: { title: string }) => {
   return (
     <div className="px-6 py-[27px] flex justify-between text-black">
       <div className="text-[28px] font-semibold">{title}</div>
-      <div className="flex">
-        <div className="bg-white rounded-full shadow-md h-[40px] flex py-[10px] px-[12px] mr-4 w-[200px] justify-between">
-          <div className="flex">
+      <div className="flex items-center">
+        <Button
+          variant="contained"
+          style={{
+            height: 36,
+            background: "white",
+            borderRadius: 36 / 2,
+            minHeight: 0,
+            marginRight: 16,
+          }}
+        >
+          <div className="flex items-center">
+            <div className="flex">
+              <Avatar
+                style={{ height: 24, width: 24, marginRight: 6 }}
+                src="https://i.pravatar.cc/300"
+                alt="profile"
+              />
+              <div className="w-[122px]">
+                <Typography textAlign={"left"} color={"black"} fontSize={14}>
+                  Cat
+                </Typography>
+              </div>
+            </div>
+            <Image
+              src={IcDropdownPrimary}
+              height={20}
+              width={20}
+              alt="dropdown"
+            />
+          </div>
+        </Button>
+        <Button
+          variant="contained"
+          style={{
+            height: 36,
+            background: "white",
+            borderRadius: 36 / 2,
+            minHeight: 0,
+            minWidth: 0,
+            marginRight: 16,
+          }}
+        >
+          <div className="flex items-center">
             <Avatar
               style={{ height: 24, width: 24, marginRight: 6 }}
               src="https://i.pravatar.cc/300"
               alt="profile"
             />
-            <Typography fontSize={14}>Cat</Typography>
+            <Typography color={"black"} fontSize={14}>
+              0xabcd...1234
+            </Typography>
           </div>
-          <Image
-            src={IcDropdownPrimary}
-            height={20}
-            width={20}
-            alt="dropdown"
-          />
-        </div>
-        <div className="bg-white rounded-full shadow-md h-[40px] flex py-[10px] px-[12px] mr-4">
-          <Avatar
-            style={{ height: 24, width: 24, marginRight: 6 }}
-            src="https://i.pravatar.cc/300"
-            alt="profile"
-          />
-          <Typography fontSize={14}>0xabcd...1234</Typography>
-        </div>
-        <button className="bg-white rounded-full shadow-md h-[40px] w-[40px] items-center justify-center flex">
+        </Button>
+
+        <Button
+          variant="contained"
+          style={{
+            height: 36,
+            width: 36,
+            background: "white",
+            borderRadius: 36 / 2,
+            padding: 0,
+            minHeight: 0,
+            minWidth: 0,
+          }}
+        >
           <Image
             src={IcNotification}
             height={24}
             width={24}
             alt={"notification"}
           />
-        </button>
+        </Button>
       </div>
     </div>
   );
