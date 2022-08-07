@@ -12,7 +12,7 @@ interface TableInterface {
   meta: any;
   onClickNext: () => void;
   onClickPrevios: () => void;
-  isFetching: boolean;
+  isFetching?: boolean;
 }
 export default function Table({
   data,
@@ -36,11 +36,12 @@ export default function Table({
           <thead className="bg-background-content drop-shadow-sm">
             {table &&
               table.getHeaderGroups().map((headerGroup) => (
-                <tr className="" key={headerGroup.id}>
+                <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
+                      style={{ width: header.column.columnDef.size ?? "100%" }}
                       className={
-                        "text-[14px] py-[14px] px-4 flex-1 text-start font-semibold text-black"
+                        "text-[14px] py-[14px] px-4 text-start font-semibold text-black"
                       }
                       key={header.id}
                       colSpan={header.colSpan}

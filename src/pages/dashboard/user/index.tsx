@@ -4,7 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
-import { getAllUser, updateUserStatus } from "../../../api/users";
+import { getReports } from "../../../api/GET_Reports";
+import { updateReports } from "../../../api/PATCH_Reports";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
 import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
@@ -48,6 +49,7 @@ export default function UserReported() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      size: 120,
       cell: (value) => (
         <Typography fontSize={14}>
           {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
@@ -57,6 +59,7 @@ export default function UserReported() {
     {
       accessorKey: "totalReported",
       header: "Total reports",
+      size: 120,
     },
     {
       accessorKey: "type",
@@ -127,12 +130,12 @@ export default function UserReported() {
     refetch: refetchingGetAllUser,
     isFetching,
     data: dataUserReported,
-  } = useQuery(["/getAllUser"], () => getAllUser({ pageNumber, filter }), {
+  } = useQuery(["/getAllUser"], () => getReports({ pageNumber, filter }), {
     enabled: false,
   });
 
   const { mutateAsync: mutateUpdateUserStatus, isLoading } =
-    useMutation(updateUserStatus);
+    useMutation(updateReports);
 
   useEffect(() => {
     refetchingGetAllUser();

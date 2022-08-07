@@ -4,7 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
-import { getAllUser, updateUserStatus } from "../../../api/users";
+import { getReports } from "../../../api/GET_Reports";
+import { updateReports } from "../../../api/PATCH_Reports";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
 import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
@@ -31,7 +32,7 @@ export default function PostResported() {
   const columns: ColumnDef<DataResponseUserReportedInterface>[] = [
     {
       accessorKey: "reportedDetail",
-      header: "Reported user",
+      header: "Post owner",
       cell: (value) => (
         <AvatarWithName
           image={value.row.original.reportedDetail.user.profilePictureURL}
@@ -43,6 +44,7 @@ export default function PostResported() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      size: 120,
       cell: (value) => (
         <Typography fontSize={14}>
           {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
@@ -52,6 +54,7 @@ export default function PostResported() {
     {
       accessorKey: "type",
       header: "Type",
+      size: 144,
       cell: (value) => (
         <Typography textTransform={"capitalize"} fontSize={14}>
           {value.row.original.type}
@@ -61,6 +64,7 @@ export default function PostResported() {
     {
       accessorKey: "totalReported",
       header: "Total reports",
+      size: 144,
     },
     {
       accessorKey: "type",
@@ -74,6 +78,7 @@ export default function PostResported() {
     {
       accessorKey: "id",
       header: "Action",
+      size: 144,
       cell: (value) => (
         <Button
           onClick={() => handleRespond(value.row.original)}
@@ -108,7 +113,7 @@ export default function PostResported() {
     refetch: refetchingGetAllPost,
     isFetching,
     data: dataPostReported,
-  } = useQuery(["/getAllPost"], () => getAllUser({ pageNumber, filter }), {
+  } = useQuery(["/getAllPost"], () => getReports({ pageNumber, filter }), {
     enabled: false,
   });
 
@@ -141,7 +146,7 @@ export default function PostResported() {
   };
 
   const { mutateAsync: mutateUpdateUserStatus, isLoading } =
-    useMutation(updateUserStatus);
+    useMutation(updateReports);
 
   useEffect(() => {
     refetchingGetAllPost();
@@ -250,7 +255,7 @@ export default function PostResported() {
             <Button isFullWidth onClick={handleIgnore} label="Ignore" />
           </div>
           <div className="flex-1">
-            <Button isFullWidth onClick={handleIgnore} primary label="Remove" />
+            <Button isFullWidth onClick={handleBanned} primary label="Remove" />
           </div>
         </div>
       </Modal>

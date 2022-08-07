@@ -4,7 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
-import { deleteUser, getAllUser } from "../../../api/users";
+import { deleteReports } from "../../../api/DELETE_Reports";
+import { getReports } from "../../../api/GET_Reports";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
 import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
@@ -33,7 +34,7 @@ export default function PostResponded() {
   const columns: ColumnDef<DataResponseUserReportedInterface>[] = [
     {
       accessorKey: "reportedDetail",
-      header: "Reported user",
+      header: "Post owner",
       cell: (value) => (
         <AvatarWithName
           image={value.row.original.reportedDetail.user.profilePictureURL}
@@ -45,6 +46,7 @@ export default function PostResponded() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      size: 120,
       cell: (value) => (
         <Typography fontSize={14}>
           {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
@@ -55,6 +57,7 @@ export default function PostResponded() {
     {
       accessorKey: "updatedAt",
       header: "Respond date",
+      size: 120,
       cell: (value) => (
         <Typography fontSize={14}>
           {dateFormatter(new Date(value.row.original.updatedAt), "dd/MM/yy")}
@@ -64,12 +67,13 @@ export default function PostResponded() {
     {
       accessorKey: "totalReported",
       header: "Total reports",
+      size: 120,
     },
     {
       accessorKey: "type",
       header: "Description",
       cell: (value) => (
-        <Typography>
+        <Typography fontSize={14}>
           {translationText(value.row.original.type as ReportType)}
         </Typography>
       ),
@@ -155,7 +159,7 @@ export default function PostResponded() {
     data: dataPostResponded,
   } = useQuery(
     ["/getAllPostResponded"],
-    () => getAllUser({ pageNumber, filter }),
+    () => getReports({ pageNumber, filter }),
     {
       enabled: false,
     }
@@ -172,7 +176,8 @@ export default function PostResponded() {
     }
   };
 
-  const { mutateAsync: mutateDeleteUser, isLoading } = useMutation(deleteUser);
+  const { mutateAsync: mutateDeleteUser, isLoading } =
+    useMutation(deleteReports);
 
   useEffect(() => {
     refetchingGetAllResponded();
@@ -182,11 +187,11 @@ export default function PostResponded() {
     <div>
       <div className="mb-[5px]">
         <Typography fontWeight={600} fontSize={18}>
-          Responded User
+          Responded Post
         </Typography>
       </div>
       <Typography fontSize={14} fontWeight={400} color={"#757575"}>
-        {dataPostResponded?.meta.totalItemCount ?? "0"} Reports Reports
+        {dataPostResponded?.meta.totalItemCount ?? "0"} Reports
       </Typography>
       <div className="my-6 flex">
         <div className="pr-4">
@@ -214,7 +219,7 @@ export default function PostResponded() {
       </div>
       <div className="">
         <Table
-          isFetching={isFetching}
+          // isFetching={isFetching}
           data={dataPostResponded?.data ?? []}
           columns={columns}
           meta={dataPostResponded?.meta ?? []}

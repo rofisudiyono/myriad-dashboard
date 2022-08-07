@@ -15,6 +15,9 @@ const Header = ({ title }: { title: string }) => {
             borderRadius: 36 / 2,
             minHeight: 0,
             marginRight: 16,
+            padding: 0,
+            paddingRight: 10,
+            paddingLeft: 10,
           }}
         >
           <div className="flex items-center">
@@ -47,6 +50,9 @@ const Header = ({ title }: { title: string }) => {
             minHeight: 0,
             minWidth: 0,
             marginRight: 16,
+            padding: 0,
+            paddingRight: 10,
+            paddingLeft: 10,
           }}
         >
           <div className="flex items-center">

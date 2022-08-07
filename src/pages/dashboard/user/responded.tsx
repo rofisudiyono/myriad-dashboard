@@ -4,7 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
-import { deleteUser, getAllUser } from "../../../api/users";
+import { deleteReports } from "../../../api/DELETE_Reports";
+import { getReports } from "../../../api/GET_Reports";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
 import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
@@ -35,6 +36,7 @@ export default function UserResponded() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      size: 120,
       cell: (value) => (
         <Typography fontSize={14}>
           {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
@@ -44,6 +46,7 @@ export default function UserResponded() {
     {
       accessorKey: "updatedAt",
       header: "Respond Date",
+      size: 120,
       cell: (value) => (
         <Typography fontSize={14}>
           {dateFormatter(new Date(value.row.original.updatedAt), "dd/MM/yy")}
@@ -53,6 +56,7 @@ export default function UserResponded() {
     {
       accessorKey: "status",
       header: "Penalty Status",
+      size: 120,
     },
     {
       accessorKey: "id",
@@ -94,7 +98,7 @@ export default function UserResponded() {
     data: dataUserResponded,
   } = useQuery(
     ["/getAllUserResponded"],
-    () => getAllUser({ pageNumber, filter }),
+    () => getReports({ pageNumber, filter }),
     {
       enabled: false,
     }
@@ -111,7 +115,8 @@ export default function UserResponded() {
     }
   };
 
-  const { mutateAsync: mutateDeleteUser, isLoading } = useMutation(deleteUser);
+  const { mutateAsync: mutateDeleteUser, isLoading } =
+    useMutation(deleteReports);
 
   useEffect(() => {
     refetchingGetAllUser();
@@ -121,7 +126,7 @@ export default function UserResponded() {
     <div>
       <div className="mb-[5px]">
         <Typography fontWeight={600} fontSize={18}>
-          Reported User
+          Responded report
         </Typography>
       </div>
       <Typography fontSize={14} fontWeight={400} color={"#757575"}>
