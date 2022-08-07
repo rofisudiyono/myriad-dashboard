@@ -1,6 +1,7 @@
 import getConfig from "next/config";
 import axios from "./axiosInstance";
 const { publicRuntimeConfig } = getConfig();
+
 export const updateReports = async ({
   reportId,
   status,
