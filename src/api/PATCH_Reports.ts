@@ -18,7 +18,7 @@ export const updateReports = async ({
       },
       {
         headers: {
-          Authorization: `Bearer ${publicRuntimeConfig.myriadDashboardApiKey}`,
+          Authorization: `Bearer ${publicRuntimeConfig.myriadApiKey}`,
         },
       }
     )
