@@ -1,26 +1,56 @@
-import Button from "@mui/material/Button";
+import { Button as ButtonMui } from "@mui/material";
+import { colors } from "../../../utils";
 
 interface ButtonOutlineInterface {
   onClick: () => void;
-  title: string;
+  label: string;
+  primary?: boolean;
+  isFullWidth?: boolean;
+  disable?: boolean;
 }
 
-const ButtonOutline = (props: ButtonOutlineInterface) => {
-  const { onClick, title } = props;
+const Button = ({
+  label,
+  primary,
+  onClick,
+  isFullWidth,
+  disable,
+  ...props
+}: ButtonOutlineInterface) => {
+  if (primary) {
+    return (
+      <ButtonMui
+        onClick={disable ? undefined : onClick}
+        style={{
+          backgroundColor: colors.primary,
+          borderRadius: 20,
+          color: "white",
+          textTransform: "capitalize",
+        }}
+        fullWidth={isFullWidth}
+        {...props}
+      >
+        Remove
+      </ButtonMui>
+    );
+  }
   return (
-    <Button
-      onClick={onClick}
+    <ButtonMui
+      onClick={disable ? undefined : onClick}
       variant="outlined"
       style={{
+        backgroundColor: disable ? "#EDEDED" : "white",
         borderRadius: 20,
-        color: "black",
-        borderColor: "#FFD24D",
+        color: disable ? "#C2C2C2" : "black",
+        borderColor: disable ? "#C2C2C2" : "#FFD24D",
         textTransform: "capitalize",
       }}
+      fullWidth={isFullWidth}
+      {...props}
     >
-      {title}
-    </Button>
+      {label}
+    </ButtonMui>
   );
 };
 
-export default ButtonOutline;
+export default Button;

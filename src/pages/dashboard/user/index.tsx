@@ -1,30 +1,34 @@
-import { Backdrop, Button, CircularProgress, Typography } from "@mui/material";
+import { Backdrop, CircularProgress, Typography } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
-import { getAllUser, updateUserStatus } from "../../../api/users";
+import { getReports } from "../../../api/GET_Reports";
+import { updateReports } from "../../../api/PATCH_Reports";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
-import ButtonOutline from "../../../components/atoms/Button";
+import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
 import Table from "../../../components/organisms/Table";
 import {
   DataResponseUserReportedInterface,
   ReportType,
   ReportTypeCategoryMapper,
-  ResponseUserReported,
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
-import { colors } from "../../../utils";
+import { dateFormatter } from "../../../utils/dateFormatter";
 
 export default function UserReported() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
-  const [dataUserReported, setDataUserReported] =
-    useState<ResponseUserReported>();
   const [userSelected, setUserSelected] =
     useState<DataResponseUserReportedInterface>();
   const [sortingDate, setSortingDate] = useState("ASC");
+  const [pageNumber, setPageNumber] = useState<number>(1);
+
+  const filter = JSON.stringify({
+    where: { status: "pending", referenceType: "user" },
+    order: [`createdAt ${sortingDate}`],
+  });
 
   const translationText = (reportType: ReportType) => {
     return ReportTypeCategoryMapper[reportType];
@@ -45,10 +49,17 @@ export default function UserReported() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      size: 120,
+      cell: (value) => (
+        <Typography fontSize={14}>
+          {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
+        </Typography>
+      ),
     },
     {
       accessorKey: "totalReported",
       header: "Total reports",
+      size: 120,
     },
     {
       accessorKey: "type",
@@ -63,9 +74,9 @@ export default function UserReported() {
       accessorKey: "id",
       header: "Action",
       cell: (value) => (
-        <ButtonOutline
+        <Button
           onClick={() => handleRespond(value.row.original)}
-          title="Respond"
+          label="Respond"
         />
       ),
     },
@@ -81,7 +92,6 @@ export default function UserReported() {
       title: "Olders",
     },
   ];
-  const pageNumber = 1;
 
   const handleRespond = (value: DataResponseUserReportedInterface) => {
     setUserSelected(value);
@@ -90,48 +100,46 @@ export default function UserReported() {
 
   const handleIgnore = async () => {
     const status = "ignored";
-    const response = await updateUserStatus({
+    const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
-      getAllData();
+      refetchingGetAllUser();
       setIsShowModalRespond(false);
     }
   };
 
   const handleBanned = async () => {
     const status = "removed";
-    const response = await updateUserStatus({
+    const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
-      getAllData();
+      refetchingGetAllUser();
       setIsShowModalRespond(false);
     }
   };
 
-  const getAllData = async () => {
-    const filter = JSON.stringify({
-      where: { status: "pending", referenceType: "user" },
-      order: [`createdAt ${sortingDate}`],
-    });
-    setIsLoading(true);
-    const response = await getAllUser({ pageNumber, filter });
-    setIsLoading(false);
-    if (response) {
-      setDataUserReported(response);
-    }
-  };
+  const {
+    refetch: refetchingGetAllUser,
+    isFetching,
+    data: dataUserReported,
+  } = useQuery(["/getAllUser"], () => getReports({ pageNumber, filter }), {
+    enabled: false,
+  });
+
+  const { mutateAsync: mutateUpdateUserStatus, isLoading } =
+    useMutation(updateReports);
 
   useEffect(() => {
-    getAllData();
-  }, [sortingDate]);
+    refetchingGetAllUser();
+  }, [sortingDate, pageNumber]);
 
   return (
     <div>
@@ -152,7 +160,16 @@ export default function UserReported() {
         />
       </div>
       <div className="">
-        <Table data={dataUserReported?.data ?? []} columns={columns} />
+        <Table
+          isFetching={isFetching}
+          data={dataUserReported?.data ?? []}
+          columns={columns}
+          meta={dataUserReported?.meta ?? []}
+          onClickNext={() => setPageNumber(dataUserReported?.meta.nextPage!)}
+          onClickPrevios={() =>
+            setPageNumber(dataUserReported?.meta.currentPage! - 1)
+          }
+        />
       </div>
       <Modal
         open={isShowModalRespond}
@@ -227,33 +244,10 @@ export default function UserReported() {
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
-            <Button
-              fullWidth
-              onClick={() => handleIgnore()}
-              variant="outlined"
-              style={{
-                borderRadius: 20,
-                color: "black",
-                borderColor: "#FFD24D",
-                textTransform: "capitalize",
-              }}
-            >
-              Ignore
-            </Button>
+            <Button isFullWidth onClick={() => handleIgnore()} label="Ignore" />
           </div>
           <div className="flex-1">
-            <Button
-              onClick={() => handleBanned()}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                color: "white",
-                textTransform: "capitalize",
-              }}
-              fullWidth
-            >
-              Banned
-            </Button>
+            <Button isFullWidth onClick={handleBanned} primary label="Banned" />
           </div>
         </div>
       </Modal>

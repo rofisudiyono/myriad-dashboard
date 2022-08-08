@@ -1,26 +1,25 @@
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
-import { deleteUser, getAllUser } from "../../../api/users";
+import { deleteReports } from "../../../api/DELETE_Reports";
+import { getReports } from "../../../api/GET_Reports";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
+import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
 import Table from "../../../components/organisms/Table";
 import {
   DataResponseUserReportedInterface,
   ReportType,
   ReportTypeCategoryMapper,
-  ResponseUserReported,
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
-import { colors } from "../../../utils";
+import { dateFormatter } from "../../../utils/dateFormatter";
 
 export default function PostResponded() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
-  const [dataPostResponded, setDataPostResponded] =
-    useState<ResponseUserReported>();
   const [userSelected, setUserSelected] =
     useState<DataResponseUserReportedInterface>();
   const [sortingDate, setSortingDate] = useState("DESC");
@@ -35,7 +34,7 @@ export default function PostResponded() {
   const columns: ColumnDef<DataResponseUserReportedInterface>[] = [
     {
       accessorKey: "reportedDetail",
-      header: "Reported user",
+      header: "Post owner",
       cell: (value) => (
         <AvatarWithName
           image={value.row.original.reportedDetail.user.profilePictureURL}
@@ -47,21 +46,34 @@ export default function PostResponded() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      size: 120,
+      cell: (value) => (
+        <Typography fontSize={14}>
+          {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
+        </Typography>
+      ),
     },
 
     {
       accessorKey: "updatedAt",
       header: "Respond date",
+      size: 120,
+      cell: (value) => (
+        <Typography fontSize={14}>
+          {dateFormatter(new Date(value.row.original.updatedAt), "dd/MM/yy")}
+        </Typography>
+      ),
     },
     {
       accessorKey: "totalReported",
       header: "Total reports",
+      size: 120,
     },
     {
       accessorKey: "type",
       header: "Description",
       cell: (value) => (
-        <Typography>
+        <Typography fontSize={14}>
           {translationText(value.row.original.type as ReportType)}
         </Typography>
       ),
@@ -71,22 +83,10 @@ export default function PostResponded() {
       header: "Action",
       cell: (value) => (
         <Button
-          disabled={value.row.original.status === "ignored"}
+          disable={value.row.original.status === "ignored"}
           onClick={() => handleRespond(value.row.original)}
-          variant="outlined"
-          style={{
-            backgroundColor:
-              value.row.original.status === "ignored" ? "#EDEDED" : "white",
-            borderRadius: 20,
-            color:
-              value.row.original.status === "ignored" ? "#C2C2C2" : "black",
-            borderColor:
-              value.row.original.status === "ignored" ? "#C2C2C2" : "#FFD24D",
-            textTransform: "capitalize",
-          }}
-        >
-          Respond
-        </Button>
+          label="Respond"
+        />
       ),
     },
   ];
@@ -135,67 +135,68 @@ export default function PostResponded() {
     setIsShowModalRespond(true);
   };
 
-  const getAllData = async () => {
-    const filter = JSON.stringify({
-      where: {
-        status:
-          sortingPostStatus === "all"
-            ? { inq: ["ignored", "removed"] }
-            : sortingPostStatus === "ignored"
-            ? "ignored"
-            : "removed",
-        referenceType:
-          sortingPostType === "all"
-            ? { inq: ["post", "comment"] }
-            : sortingPostType === "comment"
-            ? "comment"
-            : "post",
-      },
-      order: [`updatedAt ${sortingDate}`],
-    });
-    setIsLoading(true);
-    const response = await getAllUser({ pageNumber, filter });
-    setIsLoading(false);
-    if (response) {
-      setDataPostResponded(response);
+  const filter = JSON.stringify({
+    where: {
+      status:
+        sortingPostStatus === "all"
+          ? { inq: ["ignored", "removed"] }
+          : sortingPostStatus === "ignored"
+          ? "ignored"
+          : "removed",
+      referenceType:
+        sortingPostType === "all"
+          ? { inq: ["post", "comment"] }
+          : sortingPostType === "comment"
+          ? "comment"
+          : "post",
+    },
+    order: [`updatedAt ${sortingDate}`],
+  });
+
+  const {
+    refetch: refetchingGetAllResponded,
+    isFetching,
+    data: dataPostResponded,
+  } = useQuery(
+    ["/getAllPostResponded"],
+    () => getReports({ pageNumber, filter }),
+    {
+      enabled: false,
     }
-  };
+  );
 
   const handleRestore = async () => {
-    const response = await deleteUser({ reportId: userSelected?.id! });
+    const response = await mutateDeleteUser({ reportId: userSelected?.id! });
     if (response) {
       setIsShowModalRespond(false);
-      getAllData();
+      refetchingGetAllResponded();
     } else {
       setIsShowModalRespond(false);
-      getAllData();
+      refetchingGetAllResponded();
     }
   };
 
+  const { mutateAsync: mutateDeleteUser, isLoading } =
+    useMutation(deleteReports);
+
   useEffect(() => {
-    getAllData();
-  }, [sortingDate, sortingPostType, sortingPostStatus]);
+    refetchingGetAllResponded();
+  }, [sortingDate, sortingPostType, sortingPostStatus, pageNumber]);
 
   return (
     <div>
       <div className="mb-[5px]">
         <Typography fontWeight={600} fontSize={18}>
-          Reported User
+          Responded Post
         </Typography>
       </div>
       <Typography fontSize={14} fontWeight={400} color={"#757575"}>
-        {dataPostResponded?.data.toString().length ?? "0"} Reports
+        {dataPostResponded?.meta.totalItemCount ?? "0"} Reports
       </Typography>
       <div className="my-6 flex">
-        <DropdownFilter
-          label="Report Date"
-          data={dataFilter ?? []}
-          value={sortingDate}
-          onChange={(event: any) => setSortingDate(event.target.value)}
-        />
-        <div className="px-4">
+        <div className="pr-4">
           <DropdownFilter
-            label="Respond date"
+            label="Report date"
             data={dataFilter ?? []}
             value={sortingDate}
             onChange={(event: any) => setSortingDate(event.target.value)}
@@ -217,11 +218,16 @@ export default function PostResponded() {
         </div>
       </div>
       <div className="">
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <Table data={dataPostResponded?.data ?? []} columns={columns} />
-        )}
+        <Table
+          // isFetching={isFetching}
+          data={dataPostResponded?.data ?? []}
+          columns={columns}
+          meta={dataPostResponded?.meta ?? []}
+          onClickNext={() => setPageNumber(dataPostResponded?.meta.nextPage!)}
+          onClickPrevios={() =>
+            setPageNumber(dataPostResponded?.meta.currentPage! - 1)
+          }
+        />
       </div>
       <Modal
         open={isShowModalRespond}
@@ -272,12 +278,9 @@ export default function PostResponded() {
               <div className="mb-[24px]">
                 <div className="flex justify-between">
                   <AvatarWithName
-                    image={
-                      userSelected?.reportedDetail.user
-                        .profilePictureURL as string
-                    }
-                    name={item.reportedBy as string}
-                    desc={item.id as string}
+                    image={userSelected?.reportedDetail.user.profilePictureURL!}
+                    name={item.reportedBy!}
+                    desc={item.id!}
                   />
                   <Typography fontSize={12} color={"#616161"}>
                     16/07/22
@@ -297,32 +300,18 @@ export default function PostResponded() {
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
             <Button
-              fullWidth
+              isFullWidth
               onClick={() => setIsShowModalRespond(false)}
-              variant="outlined"
-              style={{
-                borderRadius: 20,
-                color: "black",
-                borderColor: "#FFD24D",
-                textTransform: "capitalize",
-              }}
-            >
-              Cancel
-            </Button>
+              label="Cancel"
+            />
           </div>
           <div className="flex-1">
             <Button
+              isFullWidth
               onClick={handleRestore}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                color: "white",
-                textTransform: "capitalize",
-              }}
-              fullWidth
-            >
-              Restore
-            </Button>
+              primary
+              label="Restore"
+            />
           </div>
         </div>
       </Modal>

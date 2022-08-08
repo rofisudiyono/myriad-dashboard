@@ -11,10 +11,18 @@ const AvatarWithName = (props: AvatarWithButtonInterface) => {
     <div className="flex">
       <Avatar src={image} />
       <div className="ml-2">
-        <Typography fontSize={14} color={"#0A0A0A"}>
+        <Typography
+          textTransform={"capitalize"}
+          fontSize={14}
+          color={"#0A0A0A"}
+        >
           {name}
         </Typography>
-        <Typography fontSize={10} color={"#616161"}>
+        <Typography
+          textTransform={"capitalize"}
+          fontSize={10}
+          color={"#616161"}
+        >
           {desc}
         </Typography>
       </div>

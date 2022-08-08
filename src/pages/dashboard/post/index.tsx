@@ -1,31 +1,29 @@
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { ReactNode, useEffect, useState } from "react";
 import { IcOpenUrl } from "../../../../public/icons";
-import { getAllUser, updateUserStatus } from "../../../api/users";
+import { getReports } from "../../../api/GET_Reports";
+import { updateReports } from "../../../api/PATCH_Reports";
 import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
-import ButtonOutline from "../../../components/atoms/Button";
+import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
 import Table from "../../../components/organisms/Table";
 import {
   DataResponseUserReportedInterface,
   ReportType,
   ReportTypeCategoryMapper,
-  ResponseUserReported,
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
-import { colors } from "../../../utils";
+import { dateFormatter } from "../../../utils/dateFormatter";
 
 export default function PostResported() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
-  const [dataPostReported, setDataPostReported] =
-    useState<ResponseUserReported>();
-  console.log("dataPostReported", dataPostReported);
   const [userSelected, setUserSelected] =
     useState<DataResponseUserReportedInterface>();
-  const [sortingDate, setSortingDate] = useState("DESC");
+  const [sortingDate, setSortingDate] = useState<string>("DESC");
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   const translationText = (reportType: ReportType) => {
     return ReportTypeCategoryMapper[reportType];
@@ -34,7 +32,7 @@ export default function PostResported() {
   const columns: ColumnDef<DataResponseUserReportedInterface>[] = [
     {
       accessorKey: "reportedDetail",
-      header: "Reported user",
+      header: "Post owner",
       cell: (value) => (
         <AvatarWithName
           image={value.row.original.reportedDetail.user.profilePictureURL}
@@ -46,20 +44,33 @@ export default function PostResported() {
     {
       accessorKey: "createdAt",
       header: "Report Date",
+      size: 120,
+      cell: (value) => (
+        <Typography fontSize={14}>
+          {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
+        </Typography>
+      ),
     },
     {
       accessorKey: "type",
-      header: "Total reporter",
+      header: "Type",
+      size: 144,
+      cell: (value) => (
+        <Typography textTransform={"capitalize"} fontSize={14}>
+          {value.row.original.type}
+        </Typography>
+      ),
     },
     {
       accessorKey: "totalReported",
       header: "Total reports",
+      size: 144,
     },
     {
       accessorKey: "type",
       header: "Category",
       cell: (value) => (
-        <Typography>
+        <Typography fontSize={14}>
           {translationText(value.row.original.type as ReportType)}
         </Typography>
       ),
@@ -67,10 +78,11 @@ export default function PostResported() {
     {
       accessorKey: "id",
       header: "Action",
+      size: 144,
       cell: (value) => (
-        <ButtonOutline
+        <Button
           onClick={() => handleRespond(value.row.original)}
-          title="Respond"
+          label="Respond"
         />
       ),
     },
@@ -86,55 +98,59 @@ export default function PostResported() {
       title: "Olders",
     },
   ];
-  const pageNumber = 1;
 
   const handleRespond = (value: DataResponseUserReportedInterface) => {
     setUserSelected(value);
     setIsShowModalRespond(true);
   };
 
-  const getAllData = async () => {
-    const filter = JSON.stringify({
-      where: { status: "pending", referenceType: { inq: ["post", "comment"] } },
-      order: [`createdAt ${sortingDate}`],
-    });
-    setIsLoading(true);
-    const response = await getAllUser({ pageNumber, filter });
-    setIsLoading(false);
-    if (response) {
-      setDataPostReported(response);
-    }
-  };
+  const filter = JSON.stringify({
+    where: { status: "pending", referenceType: { inq: ["post", "comment"] } },
+    order: [`createdAt ${sortingDate}`],
+  });
+
+  const {
+    refetch: refetchingGetAllPost,
+    isFetching,
+    data: dataPostReported,
+  } = useQuery(["/getAllPost"], () => getReports({ pageNumber, filter }), {
+    enabled: false,
+  });
+
   const handleIgnore = async () => {
     const status = "ignored";
-    const response = await updateUserStatus({
+    const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
-      getAllData();
+      refetchingGetAllPost();
       setIsShowModalRespond(false);
     }
   };
 
   const handleBanned = async () => {
     const status = "removed";
-    const response = await updateUserStatus({
+    const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
-      getAllData();
+      refetchingGetAllPost();
       setIsShowModalRespond(false);
     }
   };
+
+  const { mutateAsync: mutateUpdateUserStatus, isLoading } =
+    useMutation(updateReports);
+
   useEffect(() => {
-    getAllData();
-  }, [sortingDate]);
+    refetchingGetAllPost();
+  }, [sortingDate, pageNumber]);
 
   return (
     <div>
@@ -144,7 +160,7 @@ export default function PostResported() {
         </Typography>
       </div>
       <Typography fontSize={14} fontWeight={400} color={"#757575"}>
-        10 Reports
+        {dataPostReported?.meta.totalItemCount ?? "0"} Reports
       </Typography>
       <div className="my-6">
         <DropdownFilter
@@ -155,11 +171,16 @@ export default function PostResported() {
         />
       </div>
       <div className="">
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <Table data={dataPostReported?.data ?? []} columns={columns} />
-        )}
+        <Table
+          isFetching={isFetching}
+          data={dataPostReported?.data ?? []}
+          columns={columns}
+          meta={dataPostReported?.meta ?? []}
+          onClickNext={() => setPageNumber(dataPostReported?.meta.nextPage!)}
+          onClickPrevios={() =>
+            setPageNumber(dataPostReported?.meta.currentPage! - 1)
+          }
+        />
       </div>
       <Modal
         open={isShowModalRespond}
@@ -210,12 +231,9 @@ export default function PostResported() {
               <div className="mb-[24px]">
                 <div className="flex justify-between">
                   <AvatarWithName
-                    image={
-                      userSelected?.reportedDetail.user
-                        .profilePictureURL as string
-                    }
-                    name={item.reportedBy as string}
-                    desc={item.id as string}
+                    image={userSelected?.reportedDetail.user.profilePictureURL!}
+                    name={item.reportedBy!}
+                    desc={item.id!}
                   />
                   <Typography fontSize={12} color={"#616161"}>
                     16/07/22
@@ -234,33 +252,10 @@ export default function PostResported() {
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
-            <Button
-              fullWidth
-              onClick={handleIgnore}
-              variant="outlined"
-              style={{
-                borderRadius: 20,
-                color: "black",
-                borderColor: "#FFD24D",
-                textTransform: "capitalize",
-              }}
-            >
-              Ignore
-            </Button>
+            <Button isFullWidth onClick={handleIgnore} label="Ignore" />
           </div>
           <div className="flex-1">
-            <Button
-              onClick={handleBanned}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                color: "white",
-                textTransform: "capitalize",
-              }}
-              fullWidth
-            >
-              Remove
-            </Button>
+            <Button isFullWidth onClick={handleBanned} primary label="Remove" />
           </div>
         </div>
       </Modal>
