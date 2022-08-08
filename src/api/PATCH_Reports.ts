@@ -1,5 +1,7 @@
-import { token_api } from "../config";
+import getConfig from "next/config";
 import axios from "./axiosInstance";
+const { publicRuntimeConfig } = getConfig();
+
 export const updateReports = async ({
   reportId,
   status,
@@ -16,7 +18,7 @@ export const updateReports = async ({
       },
       {
         headers: {
-          Authorization: `Bearer ${token_api}`,
+          Authorization: `Bearer ${publicRuntimeConfig.myriadDashboardApiKey}`,
         },
       }
     )

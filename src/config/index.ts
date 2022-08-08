@@ -1,3 +1,0 @@
-export const token_api =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTU0NTExZTVkZTJkOGE4MTdkYzI2NyIsIm5hbWUiOiJNeXJpYWQgT2ZmaWNpYWwiLCJ1c2VybmFtZSI6Im15cmlhZF9vZmZpY2lhbCIsImNyZWF0ZWRBdCI6IjIwMjEtMTItMThUMjA6NDQ6MDQuMzI3WiIsInBlcm1pc3Npb25zIjpbIm1hc3RlciIsImFkbWluIiwidXNlciJdfQ.aULgzqVA6JMN5nefEftRSWua-qupVlArbBTM0a5TeAY";
-export const testnetBaseUrl = "https://api.testnet.myriad.social/";
