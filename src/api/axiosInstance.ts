@@ -4,7 +4,7 @@ import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 
 const instance = axios.create({
-  baseURL: publicRuntimeConfig.myriadDashboardApiUrl,
+  baseURL: publicRuntimeConfig.myriadApiUrl,
   headers: { "Content-Type": "application/json" },
 });
 

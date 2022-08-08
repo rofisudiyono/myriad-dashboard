@@ -6,7 +6,7 @@ export const deleteReports = async ({ reportId }: { reportId: string }) => {
   return axios
     .delete(`reports/${reportId}`, {
       headers: {
-        Authorization: `Bearer ${publicRuntimeConfig.myriadDashboardApiKey}`,
+        Authorization: `Bearer ${publicRuntimeConfig.myriadApiKey}`,
       },
     })
     .then((response) => {

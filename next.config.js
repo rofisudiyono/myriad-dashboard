@@ -14,8 +14,8 @@ const nextConfig = {
   },
 
   publicRuntimeConfig: {
-    myriadDashboardApiUrl: process.env.NEXT_PUBLIC_DASHBOARD_API_URL,
-    myriadDashboardApiKey: process.env.NEXT_PUBLIC_DASHBOARD_API_KEY,
+    myriadApiUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001",
+    myriadApiKey: process.env.NEXT_PUBLIC_API_KEY ?? "s3cReT",
   },
 };
 
