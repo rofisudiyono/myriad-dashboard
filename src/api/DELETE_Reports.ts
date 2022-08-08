@@ -1,10 +1,12 @@
-import { token_api } from "../config";
+import getConfig from "next/config";
 import axios from "./axiosInstance";
+const { publicRuntimeConfig } = getConfig();
+
 export const deleteReports = async ({ reportId }: { reportId: string }) => {
   return axios
     .delete(`reports/${reportId}`, {
       headers: {
-        Authorization: `Bearer ${token_api}`,
+        Authorization: `Bearer ${publicRuntimeConfig.myriadDashboardApiKey}`,
       },
     })
     .then((response) => {
