@@ -1,13 +1,9 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import ContentLayout from "../../../layout/ContentLayout";
 
 export default function Instance() {
-  useEffect(() => {
-    console.log("Instance");
-  }, []);
-
   return (
-    <div>
+    <div className="bg-white rounded-[10px] p-6 h-full">
       <h1>Instance</h1>
     </div>
   );

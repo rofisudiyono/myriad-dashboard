@@ -23,9 +23,7 @@ export default function ContentLayout({
         </div>
         <div className="flex-1 h-full">
           <Header title={title} />
-          <div className="bg-white h-[calc(100%-97px)] mx-6 rounded-[10px] p-6">
-            {children}
-          </div>
+          <div className="h-[calc(100%-97px)] mx-6">{children}</div>
         </div>
       </div>
     </div>

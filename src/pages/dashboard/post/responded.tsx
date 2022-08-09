@@ -184,7 +184,7 @@ export default function PostResponded() {
   }, [sortingDate, sortingPostType, sortingPostStatus, pageNumber]);
 
   return (
-    <div>
+    <div className="bg-white rounded-[10px] p-6 h-full">
       <div className="mb-[5px]">
         <Typography fontWeight={600} fontSize={18}>
           Responded Post

@@ -3,6 +3,7 @@ import {
   IcDasboard,
   IcHelp,
   IcPost,
+  IcSettings,
   IcUser,
 } from "../../public/icons";
 import { NavigationInterface } from "../interface/NavigationInterface";
@@ -66,7 +67,7 @@ export const Navigation: Array<NavigationInterface> = [
     id: "2",
     title: "Settings",
     link: "/dashboard/settings",
-    icon: IcCluster,
+    icon: IcSettings,
     subMenu: false,
     subMenuItems: [],
   },

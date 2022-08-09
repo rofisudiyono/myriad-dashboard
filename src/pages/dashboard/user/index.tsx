@@ -142,7 +142,7 @@ export default function UserReported() {
   }, [sortingDate, pageNumber]);
 
   return (
-    <div>
+    <div className="bg-white rounded-[10px] p-6 h-full">
       <div className="mb-[5px]">
         <Typography fontWeight={600} fontSize={18}>
           Reported User

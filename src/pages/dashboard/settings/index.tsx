@@ -1,11 +1,7 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import ContentLayout from "../../../layout/ContentLayout";
 
 export default function Settings() {
-  useEffect(() => {
-    console.log("Settings");
-  }, []);
-
   return (
     <div>
       <h1>Settings</h1>

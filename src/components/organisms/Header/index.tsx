@@ -1,8 +1,9 @@
 import { Avatar, Button, Typography } from "@mui/material";
 import Image from "next/image";
 import { IcDropdownPrimary, IcNotification } from "../../../../public/icons";
-
+import { useRouter } from "next/router";
 const Header = ({ title }: { title: string }) => {
+  const router = useRouter();
   return (
     <div className="px-6 py-[27px] flex justify-between text-black">
       <div className="text-[28px] font-semibold">{title}</div>
@@ -68,6 +69,7 @@ const Header = ({ title }: { title: string }) => {
         </Button>
 
         <Button
+          onClick={() => router.push("/dashboard/notification")}
           variant="contained"
           style={{
             height: 36,

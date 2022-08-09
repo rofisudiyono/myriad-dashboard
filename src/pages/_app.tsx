@@ -24,7 +24,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={true} />
+        <ReactQueryDevtools initialIsOpen={false} />
         {getLayout(<Component {...pageProps} />)}
       </QueryClientProvider>
     </div>
