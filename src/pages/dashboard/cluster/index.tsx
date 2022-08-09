@@ -1,13 +1,9 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import ContentLayout from "../../../layout/ContentLayout";
 
 export default function Cluster() {
-  useEffect(() => {
-    console.log("cluster");
-  });
-
   return (
-    <div>
+    <div className="bg-white rounded-[10px] p-6 h-full">
       <h1>Cluster</h1>
     </div>
   );

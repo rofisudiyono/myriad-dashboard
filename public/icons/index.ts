@@ -9,7 +9,17 @@ import IcPost from "./IcPost.svg";
 import IcUser from "./IcUser.svg";
 import Logo from "./Logo.svg";
 import FavIcon from "./myriad-icon.png";
+import IcSettings from "./IcSettings.svg";
+import NotificationJoinInstance from "./NotificationJoinInstance.svg";
+import NotificationsDeployNode from "./NotificationsDeployNode.svg";
+import NotificationsReportPost from "./NotificationsReportPost.svg";
+import NotificationsReportUser from "./NotificationsReportUser.svg";
 export {
+  NotificationJoinInstance,
+  NotificationsDeployNode,
+  NotificationsReportPost,
+  NotificationsReportUser,
+  IcSettings,
   FavIcon,
   IcClosePurple,
   Logo,

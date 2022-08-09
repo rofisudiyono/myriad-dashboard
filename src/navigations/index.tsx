@@ -3,6 +3,7 @@ import {
   IcDasboard,
   IcHelp,
   IcPost,
+  IcSettings,
   IcUser,
 } from "../../public/icons";
 import { NavigationInterface } from "../interface/NavigationInterface";
@@ -18,14 +19,6 @@ export const Navigation: Array<NavigationInterface> = [
   },
   {
     id: "2",
-    title: "Cluster",
-    link: "/dashboard/cluster",
-    icon: IcCluster,
-    subMenu: false,
-    subMenuItems: [],
-  },
-  {
-    id: "3",
     title: "User",
     link: "/dashboard/user",
     icon: IcUser,
@@ -44,7 +37,7 @@ export const Navigation: Array<NavigationInterface> = [
     ],
   },
   {
-    id: "4",
+    id: "3",
     title: "Post",
     link: "/dashboard/post",
     icon: IcPost,
@@ -61,6 +54,22 @@ export const Navigation: Array<NavigationInterface> = [
         link: "/dashboard/post/responded",
       },
     ],
+  },
+  {
+    id: "4",
+    title: "Instance",
+    link: "/dashboard/instance",
+    icon: IcCluster,
+    subMenu: false,
+    subMenuItems: [],
+  },
+  {
+    id: "2",
+    title: "Settings",
+    link: "/dashboard/settings",
+    icon: IcSettings,
+    subMenu: false,
+    subMenuItems: [],
   },
   {
     id: "5",

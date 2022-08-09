@@ -1,14 +1,14 @@
 import { ReactNode } from "react";
 import ContentLayout from "../../../layout/ContentLayout";
 
-export default function Help() {
+export default function Instance() {
   return (
     <div className="bg-white rounded-[10px] p-6 h-full">
-      <h1>Help</h1>
+      <h1>Instance</h1>
     </div>
   );
 }
 
-Help.getLayout = function getLayout(page: ReactNode) {
-  return <ContentLayout title="Help">{page}</ContentLayout>;
+Instance.getLayout = function getLayout(page: ReactNode) {
+  return <ContentLayout title="Instance">{page}</ContentLayout>;
 };
