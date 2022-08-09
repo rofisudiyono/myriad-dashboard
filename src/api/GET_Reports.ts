@@ -10,7 +10,7 @@ export const getReports = async ({
   filter: string;
 }) => {
   return axios
-    .get(`reports?pageNumber=${pageNumber}&filter=${filter}`, {})
+    .get(`/reports?pageNumber=${pageNumber}&filter=${filter}`, {})
     .then((response: AxiosResponse<ResponseUserReported>) => {
       return response.data;
     })

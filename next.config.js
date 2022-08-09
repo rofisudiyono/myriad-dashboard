@@ -1,22 +1,24 @@
 const { version } = require("./package.json");
 
+const { NEXT_PUBLIC_API_KEY, NEXT_PUBLIC_API_URL, BUILD_ID } = process.env;
+
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
-  reactStrictMode: true,
+const moduleExports = {
+  reactStrictMode: false,
   swcMinify: true,
   generateBuildId: async () => {
-    if (process.env.BUILD_ID) {
-      return process.env.BUILD_ID;
+    if (BUILD_ID) {
+      return BUILD_ID;
     } else {
       return version;
     }
   },
-
+  serverRuntimeConfig: {},
   publicRuntimeConfig: {
-    myriadApiUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001",
-    myriadApiKey: process.env.NEXT_PUBLIC_API_KEY ?? "s3cReT",
+    myriadApiKey: NEXT_PUBLIC_API_KEY ?? "s3cReT",
+    myriadApiUrl: NEXT_PUBLIC_API_URL ?? "http://localhost:3001",
   },
 };
 
-module.exports = nextConfig;
+module.exports = moduleExports;

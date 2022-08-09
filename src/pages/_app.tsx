@@ -1,12 +1,11 @@
 import "@fontsource/mulish";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
-import type { ReactElement, ReactNode } from "react";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Head from "next/head";
+import type { ReactElement, ReactNode } from "react";
 import "../../styles/globals.css";
-import { FavIcon } from "../../public/icons";
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

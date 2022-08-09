@@ -1,11 +1,15 @@
 import axios from "axios";
 import getConfig from "next/config";
-// import { testnetBaseUrl } from "../config";
+
 const { publicRuntimeConfig } = getConfig();
+console.log(">>>", publicRuntimeConfig);
 
 const instance = axios.create({
   baseURL: publicRuntimeConfig.myriadApiUrl,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${publicRuntimeConfig.myriadApiKey}`,
+  },
 });
 
 export default instance;

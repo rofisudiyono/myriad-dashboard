@@ -30,7 +30,7 @@ const Button = ({
         fullWidth={isFullWidth}
         {...props}
       >
-        Remove
+        {label}
       </ButtonMui>
     );
   }

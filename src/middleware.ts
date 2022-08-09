@@ -1,11 +1,17 @@
-import { NextRequest, NextResponse, userAgent } from "next/server";
-import Cookies from "js-cookie";
+import { NextRequest, NextResponse } from "next/server";
+import { getHealtcheck } from "./api/GET_Healtcheck";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest, response: NextResponse) {
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    // Cookies.set("pathname", request.nextUrl.pathname);
-    // Cookies.set("tes", "ok");
-    // console.log("userAgent", userAgent(request));
-    // This logic is only applied to /dashboard
+    // console.log("request", request);
+    // console.log("response", response);
+    // const available = await getHealtcheck();
+    // console.log('available',availa)
+    // if (!available) {
+    //   const url = request.nextUrl.clone();
+    //   url.pathname = "/maintenance";
+    //   return NextResponse.rewrite(url);
+    // }
+    return NextResponse.next();
   }
 }
