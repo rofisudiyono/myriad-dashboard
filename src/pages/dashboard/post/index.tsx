@@ -17,7 +17,7 @@ import {
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
 import { dateFormatter } from "../../../utils/dateFormatter";
-
+import { Arrays } from "../../../constans/array";
 export default function PostResported() {
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
   const [userSelected, setUserSelected] =
@@ -88,17 +88,6 @@ export default function PostResported() {
     },
   ];
 
-  const dataFilter = [
-    {
-      value: "DESC",
-      title: "Newest",
-    },
-    {
-      value: "ASC",
-      title: "Olders",
-    },
-  ];
-
   const handleRespond = (value: DataResponseUserReportedInterface) => {
     setUserSelected(value);
     setIsShowModalRespond(true);
@@ -165,7 +154,7 @@ export default function PostResported() {
       <div className="my-6">
         <DropdownFilter
           label="Report Date"
-          data={dataFilter ?? []}
+          data={Arrays.dataFilter ?? []}
           value={sortingDate}
           onChange={(event: any) => setSortingDate(event.target.value)}
         />

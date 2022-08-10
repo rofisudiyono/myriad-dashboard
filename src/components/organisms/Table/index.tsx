@@ -9,9 +9,9 @@ import {
 interface TableInterface {
   data: any;
   columns: any;
-  meta: any;
-  onClickNext: () => void;
-  onClickPrevios: () => void;
+  meta?: any;
+  onClickNext?: () => void;
+  onClickPrevios?: () => void;
   isFetching?: boolean;
 }
 export default function Table({
@@ -64,7 +64,7 @@ export default function Table({
           ) : (
             <tbody className="">
               {table.getRowModel().rows.map((row) => (
-                <tr className="h-[68px]" key={row.id}>
+                <tr className="" key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <td className="px-4 py-[14px] text-[14px]" key={cell.id}>
                       {flexRender(

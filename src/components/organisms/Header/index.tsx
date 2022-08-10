@@ -2,8 +2,14 @@ import { Avatar, Button, Typography } from "@mui/material";
 import Image from "next/image";
 import { IcDropdownPrimary, IcNotification } from "../../../../public/icons";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 const Header = ({ title }: { title: string }) => {
   const router = useRouter();
+  const handleClickNotification = () => {
+    Cookies.set("active_menu", "10");
+    Cookies.set("active_sub_menu", "10");
+    router.push("/dashboard/notification");
+  };
   return (
     <div className="px-6 py-[27px] flex justify-between text-black">
       <div className="text-[28px] font-semibold">{title}</div>
@@ -69,7 +75,7 @@ const Header = ({ title }: { title: string }) => {
         </Button>
 
         <Button
-          onClick={() => router.push("/dashboard/notification")}
+          onClick={handleClickNotification}
           variant="contained"
           style={{
             height: 36,

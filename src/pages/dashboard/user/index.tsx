@@ -10,6 +10,7 @@ import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
 import Button from "../../../components/atoms/Button";
 import Modal from "../../../components/molecules/Modal";
 import Table from "../../../components/organisms/Table";
+import { Arrays } from "../../../constans/array";
 import {
   DataResponseUserReportedInterface,
   ReportType,
@@ -82,17 +83,6 @@ export default function UserReported() {
     },
   ];
 
-  const dataFilter = [
-    {
-      value: "DESC",
-      title: "Newest",
-    },
-    {
-      value: "ASC",
-      title: "Olders",
-    },
-  ];
-
   const handleRespond = (value: DataResponseUserReportedInterface) => {
     setUserSelected(value);
     setIsShowModalRespond(true);
@@ -154,7 +144,7 @@ export default function UserReported() {
       <div className="my-6">
         <DropdownFilter
           label="Report Date"
-          data={dataFilter ?? []}
+          data={Arrays.dataFilter ?? []}
           value={sortingDate}
           onChange={(event: any) => setSortingDate(event.target.value)}
         />

@@ -17,6 +17,7 @@ import {
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
 import { dateFormatter } from "../../../utils/dateFormatter";
+import { Arrays } from "../../../constans/array";
 
 export default function PostResponded() {
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
@@ -91,45 +92,6 @@ export default function PostResponded() {
     },
   ];
 
-  const dataFilter = [
-    {
-      value: "DESC",
-      title: "Newest",
-    },
-    {
-      value: "ASC",
-      title: "Olders",
-    },
-  ];
-  const dataFilterStatus = [
-    {
-      value: "all",
-      title: "ALL",
-    },
-    {
-      value: "remove",
-      title: "Remove",
-    },
-    {
-      value: "ignore",
-      title: "Ignore",
-    },
-  ];
-  const dataFilterType = [
-    {
-      value: "all",
-      title: "ALL",
-    },
-    {
-      value: "post",
-      title: "Post",
-    },
-    {
-      value: "comment",
-      title: "Comment",
-    },
-  ];
-
   const handleRespond = (value: DataResponseUserReportedInterface) => {
     setUserSelected(value);
     setIsShowModalRespond(true);
@@ -197,21 +159,21 @@ export default function PostResponded() {
         <div className="pr-4">
           <DropdownFilter
             label="Report date"
-            data={dataFilter ?? []}
+            data={Arrays.dataFilter ?? []}
             value={sortingDate}
             onChange={(event: any) => setSortingDate(event.target.value)}
           />
         </div>
         <DropdownFilter
           label="Post status"
-          data={dataFilterStatus ?? []}
+          data={Arrays.dataFilterStatus ?? []}
           value={sortingPostStatus}
           onChange={(event: any) => setSortingPostStatus(event.target.value)}
         />
         <div className="px-4">
           <DropdownFilter
             label="Type"
-            data={dataFilterType ?? []}
+            data={Arrays.dataFilterType ?? []}
             value={sortingPostType}
             onChange={(event: any) => setSortingPostType(event.target.value)}
           />
