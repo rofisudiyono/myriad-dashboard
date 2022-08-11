@@ -79,6 +79,7 @@ jobs:
             SSH_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_KEY
             API_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_URL
             API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_KEY
+            DASHBOARD_DNS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DASHBOARD_DNS
       - name: Deploy
         if: "${{ env.DEPLOY == 'true' }}"
         uses: appleboy/ssh-action@master
@@ -162,6 +163,7 @@ jobs:
             SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
             API_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_URL
             API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_KEY
+            DASHBOARD_DNS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/DASHBOARD_DNS
       - name: Deploy
         if: "${{ env.DEPLOY == 'true' }}"
         uses: appleboy/ssh-action@master
@@ -245,6 +247,7 @@ jobs:
             SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
             API_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_URL
             API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_KEY
+            DASHBOARD_DNS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/DASHBOARD_DNS
       - name: Deploy
         if: "${{ env.DEPLOY == 'true' }}"
         uses: appleboy/ssh-action@master
