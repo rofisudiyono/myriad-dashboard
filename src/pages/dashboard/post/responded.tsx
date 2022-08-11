@@ -17,6 +17,7 @@ import {
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
 import { dateFormatter } from "../../../utils/dateFormatter";
+import { Arrays } from "../../../constans/array";
 
 export default function PostResponded() {
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
@@ -65,16 +66,21 @@ export default function PostResponded() {
       ),
     },
     {
-      accessorKey: "totalReported",
-      header: "Total reports",
+      accessorKey: "type",
+      header: "Type",
       size: 120,
+      cell: (value) => (
+        <Typography fontSize={14} textTransform="capitalize">
+          {translationText(value.row.original.type as ReportType)}
+        </Typography>
+      ),
     },
     {
-      accessorKey: "type",
-      header: "Description",
+      accessorKey: "status",
+      header: "Post Status",
       cell: (value) => (
-        <Typography fontSize={14}>
-          {translationText(value.row.original.type as ReportType)}
+        <Typography fontSize={14} textTransform="capitalize">
+          {value.row.original.status}
         </Typography>
       ),
     },
@@ -88,45 +94,6 @@ export default function PostResponded() {
           label="Respond"
         />
       ),
-    },
-  ];
-
-  const dataFilter = [
-    {
-      value: "DESC",
-      title: "Newest",
-    },
-    {
-      value: "ASC",
-      title: "Olders",
-    },
-  ];
-  const dataFilterStatus = [
-    {
-      value: "all",
-      title: "ALL",
-    },
-    {
-      value: "remove",
-      title: "Remove",
-    },
-    {
-      value: "ignore",
-      title: "Ignore",
-    },
-  ];
-  const dataFilterType = [
-    {
-      value: "all",
-      title: "ALL",
-    },
-    {
-      value: "post",
-      title: "Post",
-    },
-    {
-      value: "comment",
-      title: "Comment",
     },
   ];
 
@@ -197,21 +164,21 @@ export default function PostResponded() {
         <div className="pr-4">
           <DropdownFilter
             label="Report date"
-            data={dataFilter ?? []}
+            data={Arrays.dataFilter ?? []}
             value={sortingDate}
             onChange={(event: any) => setSortingDate(event.target.value)}
           />
         </div>
         <DropdownFilter
           label="Post status"
-          data={dataFilterStatus ?? []}
+          data={Arrays.dataFilterStatus ?? []}
           value={sortingPostStatus}
           onChange={(event: any) => setSortingPostStatus(event.target.value)}
         />
         <div className="px-4">
           <DropdownFilter
             label="Type"
-            data={dataFilterType ?? []}
+            data={Arrays.dataFilterType ?? []}
             value={sortingPostType}
             onChange={(event: any) => setSortingPostType(event.target.value)}
           />

@@ -19,6 +19,9 @@ const moduleExports = {
     myriadApiKey: NEXT_PUBLIC_API_KEY ?? "s3cReT",
     myriadApiUrl: NEXT_PUBLIC_API_URL ?? "http://localhost:3001",
   },
+  images: {
+    domains: ["i.pravatar.cc", "firebasestorage.googleapis.com"],
+  },
 };
 
 module.exports = moduleExports;

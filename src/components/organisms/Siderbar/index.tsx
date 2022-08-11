@@ -36,7 +36,7 @@ const Siderbar: NextPage = () => {
       setSelectedListItemIndex(parseInt(Cookies.get("active_menu")!));
       setSelectedSubListItemIndex(parseInt(Cookies.get("active_sub_menu")!));
     }
-  });
+  }, [Cookies.get("active_menu")]);
 
   return (
     <>

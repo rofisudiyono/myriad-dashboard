@@ -14,7 +14,18 @@ import NotificationJoinInstance from "./NotificationJoinInstance.svg";
 import NotificationsDeployNode from "./NotificationsDeployNode.svg";
 import NotificationsReportPost from "./NotificationsReportPost.svg";
 import NotificationsReportUser from "./NotificationsReportUser.svg";
+import ExperianceGray from "./ExperianceGray.svg";
+import PostGray from "./PostGray.svg";
+import UserGray from "./UserGray.svg";
+import IcCalender from "./IcCalender.svg";
+import IcCopy from "./IcCopy.svg";
+
 export {
+  IcCalender,
+  IcCopy,
+  ExperianceGray,
+  PostGray,
+  UserGray,
   NotificationJoinInstance,
   NotificationsDeployNode,
   NotificationsReportPost,

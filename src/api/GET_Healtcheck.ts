@@ -8,7 +8,6 @@ export const getHealtcheck = async () => {
       return true;
     })
     .catch((e) => {
-      console.log(e);
       return false;
     });
 };

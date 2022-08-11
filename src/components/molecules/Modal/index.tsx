@@ -1,13 +1,7 @@
-import {
-  Avatar,
-  Button,
-  Modal as ModalMaterialUi,
-  Typography,
-} from "@mui/material";
+import { Modal as ModalMaterialUi, Typography } from "@mui/material";
 import Image from "next/image";
-import { ReactNode, useState } from "react";
-import { IcClosePurple, IcOpenUrl } from "../../../../public/icons";
-import { colors } from "../../../utils";
+import { ReactNode } from "react";
+import { IcClosePurple } from "../../../../public/icons";
 
 interface ModalInterface {
   open: boolean;

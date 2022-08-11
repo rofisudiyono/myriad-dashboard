@@ -17,7 +17,7 @@ import {
 } from "../../../interface/UserInterface";
 import ContentLayout from "../../../layout/ContentLayout";
 import { dateFormatter } from "../../../utils/dateFormatter";
-
+import { Arrays } from "../../../constans/array";
 export default function PostResported() {
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
   const [userSelected, setUserSelected] =
@@ -65,6 +65,11 @@ export default function PostResported() {
       accessorKey: "totalReported",
       header: "Total reports",
       size: 144,
+      cell: (value) => (
+        <Typography textTransform={"capitalize"} fontSize={14}>
+          {value.row.original.totalReported} reports
+        </Typography>
+      ),
     },
     {
       accessorKey: "type",
@@ -85,17 +90,6 @@ export default function PostResported() {
           label="Respond"
         />
       ),
-    },
-  ];
-
-  const dataFilter = [
-    {
-      value: "DESC",
-      title: "Newest",
-    },
-    {
-      value: "ASC",
-      title: "Olders",
     },
   ];
 
@@ -165,7 +159,7 @@ export default function PostResported() {
       <div className="my-6">
         <DropdownFilter
           label="Report Date"
-          data={dataFilter ?? []}
+          data={Arrays.dataFilter ?? []}
           value={sortingDate}
           onChange={(event: any) => setSortingDate(event.target.value)}
         />

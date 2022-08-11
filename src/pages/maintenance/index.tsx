@@ -1,11 +1,7 @@
-import { useEffect } from "react";
-import Button from "../../components/atoms/Button";
 import { useRouter } from "next/router";
+import Button from "../../components/atoms/Button";
 export default function Maintenance() {
   const router = useRouter();
-  useEffect(() => {
-    console.log("Maintenance");
-  });
 
   return (
     <div className="h-screen w-full items-center justify-center flex">
