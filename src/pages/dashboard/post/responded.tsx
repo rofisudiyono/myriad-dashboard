@@ -66,16 +66,21 @@ export default function PostResponded() {
       ),
     },
     {
-      accessorKey: "totalReported",
-      header: "Total reports",
+      accessorKey: "type",
+      header: "Type",
       size: 120,
+      cell: (value) => (
+        <Typography fontSize={14} textTransform="capitalize">
+          {translationText(value.row.original.type as ReportType)}
+        </Typography>
+      ),
     },
     {
-      accessorKey: "type",
-      header: "Description",
+      accessorKey: "status",
+      header: "Post Status",
       cell: (value) => (
-        <Typography fontSize={14}>
-          {translationText(value.row.original.type as ReportType)}
+        <Typography fontSize={14} textTransform="capitalize">
+          {value.row.original.status}
         </Typography>
       ),
     },

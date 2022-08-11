@@ -65,6 +65,11 @@ export default function PostResported() {
       accessorKey: "totalReported",
       header: "Total reports",
       size: 144,
+      cell: (value) => (
+        <Typography textTransform={"capitalize"} fontSize={14}>
+          {value.row.original.totalReported} reports
+        </Typography>
+      ),
     },
     {
       accessorKey: "type",
