@@ -1,5 +1,5 @@
-import { Button as ButtonMui } from "@mui/material";
-import { colors } from "../../../utils";
+import {Button as ButtonMui} from '@mui/material';
+import {colors} from '../../../utils';
 
 interface ButtonOutlineInterface {
   onClick: () => void;
@@ -24,12 +24,11 @@ const Button = ({
         style={{
           backgroundColor: colors.primary,
           borderRadius: 20,
-          color: "white",
-          textTransform: "capitalize",
+          color: 'white',
+          textTransform: 'capitalize',
         }}
         fullWidth={isFullWidth}
-        {...props}
-      >
+        {...props}>
         {label}
       </ButtonMui>
     );
@@ -39,15 +38,14 @@ const Button = ({
       onClick={disable ? undefined : onClick}
       variant="outlined"
       style={{
-        backgroundColor: disable ? "#EDEDED" : "white",
+        backgroundColor: disable ? '#EDEDED' : 'white',
         borderRadius: 20,
-        color: disable ? "#C2C2C2" : "black",
-        borderColor: disable ? "#C2C2C2" : "#FFD24D",
-        textTransform: "capitalize",
+        color: disable ? '#C2C2C2' : 'black',
+        borderColor: disable ? '#C2C2C2' : '#FFD24D',
+        textTransform: 'capitalize',
       }}
       fullWidth={isFullWidth}
-      {...props}
-    >
+      {...props}>
       {label}
     </ButtonMui>
   );

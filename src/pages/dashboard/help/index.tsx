@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import ContentLayout from "../../../layout/ContentLayout";
+import {ReactNode} from 'react';
+import ContentLayout from '../../../layout/ContentLayout';
 
 export default function Help() {
   return (

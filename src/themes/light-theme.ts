@@ -1,6 +1,6 @@
-import "@fontsource/mulish";
+import '@fontsource/mulish';
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {createTheme} from '@mui/material/styles';
 
 const theme = createTheme({
   components: {

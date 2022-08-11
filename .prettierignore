@@ -1,0 +1,8 @@
+.github
+.next/
+.storybook/
+dist/
+docs/
+node_modules/
+*.tsbuildinfo
+*.json

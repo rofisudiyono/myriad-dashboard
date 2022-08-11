@@ -1,11 +1,11 @@
 export type ReportType =
-  | "abusive_violent"
-  | "unauthorize_copyright"
-  | "child_exploitation"
-  | "pornography"
-  | "private_information"
-  | "spam"
-  | "unauthorize_trademark";
+  | 'abusive_violent'
+  | 'unauthorize_copyright'
+  | 'child_exploitation'
+  | 'pornography'
+  | 'private_information'
+  | 'spam'
+  | 'unauthorize_trademark';
 export interface UserDetailInterface {
   createdAt: string;
   id: string;
@@ -54,11 +54,11 @@ export interface ResponseUserReported {
 }
 
 export const ReportTypeCategoryMapper: Record<ReportType, string> = {
-  abusive_violent: "Abusive behavior and violent threats",
-  unauthorize_copyright: "Unauthorized use of copyrighted materials",
-  child_exploitation: "Child sexual exploitation",
-  pornography: "Pornography (No NSFW Tag)",
-  private_information: "Private information posted on Myriad",
-  spam: "Spam and system abuse",
-  unauthorize_trademark: "Unauthorized trademark",
+  abusive_violent: 'Abusive behavior and violent threats',
+  unauthorize_copyright: 'Unauthorized use of copyrighted materials',
+  child_exploitation: 'Child sexual exploitation',
+  pornography: 'Pornography (No NSFW Tag)',
+  private_information: 'Private information posted on Myriad',
+  spam: 'Spam and system abuse',
+  unauthorize_trademark: 'Unauthorized trademark',
 };

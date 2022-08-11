@@ -1,5 +1,4 @@
-import getConfig from "next/config";
-import axios from "./axiosInstance";
+import axios from './axiosInstance';
 
 export const getHealtcheck = async () => {
   return axios
@@ -7,7 +6,8 @@ export const getHealtcheck = async () => {
     .then(() => {
       return true;
     })
-    .catch((e) => {
+    .catch(e => {
+      console.log(e);
       return false;
     });
 };

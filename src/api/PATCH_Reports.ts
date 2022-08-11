@@ -1,22 +1,13 @@
-import getConfig from "next/config";
-import axios from "./axiosInstance";
-const { publicRuntimeConfig } = getConfig();
+import axios from './axiosInstance';
 
-console.log(publicRuntimeConfig.myriadApiKey);
-export const updateReports = async ({
-  reportId,
-  status,
-}: {
-  reportId: string;
-  status: string;
-}) => {
+export const updateReports = async ({reportId, status}: {reportId: string; status: string}) => {
   return axios
     .patch(`/reports/${reportId}`, {
       status: status,
       updatedAt: new Date(),
     })
-    .then((response) => {
+    .then(response => {
       return response.data;
     })
-    .catch((e) => console.log(e.response.data));
+    .catch(e => console.log(e.response.data));
 };

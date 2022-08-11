@@ -1,28 +1,27 @@
-import { Typography } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
-import { ReactNode, useEffect, useState } from "react";
-import { IcOpenUrl } from "../../../../public/icons";
-import { getReports } from "../../../api/GET_Reports";
-import { updateReports } from "../../../api/PATCH_Reports";
-import { AvatarWithName, DropdownFilter } from "../../../components/atoms";
-import Button from "../../../components/atoms/Button";
-import Modal from "../../../components/molecules/Modal";
-import Table from "../../../components/organisms/Table";
+import {Typography} from '@mui/material';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {ColumnDef} from '@tanstack/react-table';
+import Image from 'next/image';
+import {ReactNode, useEffect, useState} from 'react';
+import {IcOpenUrl} from '../../../../public/icons';
+import {getReports} from '../../../api/GET_Reports';
+import {updateReports} from '../../../api/PATCH_Reports';
+import {AvatarWithName, DropdownFilter} from '../../../components/atoms';
+import Button from '../../../components/atoms/Button';
+import Modal from '../../../components/molecules/Modal';
+import Table from '../../../components/organisms/Table';
 import {
   DataResponseUserReportedInterface,
   ReportType,
   ReportTypeCategoryMapper,
-} from "../../../interface/UserInterface";
-import ContentLayout from "../../../layout/ContentLayout";
-import { dateFormatter } from "../../../utils/dateFormatter";
-import { Arrays } from "../../../constans/array";
+} from '../../../interface/UserInterface';
+import ContentLayout from '../../../layout/ContentLayout';
+import {dateFormatter} from '../../../utils/dateFormatter';
+import {Arrays} from '../../../constans/array';
 export default function PostResported() {
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
-  const [userSelected, setUserSelected] =
-    useState<DataResponseUserReportedInterface>();
-  const [sortingDate, setSortingDate] = useState<string>("DESC");
+  const [userSelected, setUserSelected] = useState<DataResponseUserReportedInterface>();
+  const [sortingDate, setSortingDate] = useState<string>('DESC');
   const [pageNumber, setPageNumber] = useState<number>(1);
 
   const translationText = (reportType: ReportType) => {
@@ -31,9 +30,9 @@ export default function PostResported() {
 
   const columns: ColumnDef<DataResponseUserReportedInterface>[] = [
     {
-      accessorKey: "reportedDetail",
-      header: "Post owner",
-      cell: (value) => (
+      accessorKey: 'reportedDetail',
+      header: 'Post owner',
+      cell: value => (
         <AvatarWithName
           image={value.row.original.reportedDetail.user.profilePictureURL}
           name={value.row.original.reportedDetail.user.name}
@@ -42,54 +41,49 @@ export default function PostResported() {
       ),
     },
     {
-      accessorKey: "createdAt",
-      header: "Report Date",
+      accessorKey: 'createdAt',
+      header: 'Report Date',
       size: 120,
-      cell: (value) => (
+      cell: value => (
         <Typography fontSize={14}>
-          {dateFormatter(new Date(value.row.original.createdAt), "dd/MM/yy")}
+          {dateFormatter(new Date(value.row.original.createdAt), 'dd/MM/yy')}
         </Typography>
       ),
     },
     {
-      accessorKey: "type",
-      header: "Type",
+      accessorKey: 'type',
+      header: 'Type',
       size: 144,
-      cell: (value) => (
-        <Typography textTransform={"capitalize"} fontSize={14}>
+      cell: value => (
+        <Typography textTransform={'capitalize'} fontSize={14}>
           {value.row.original.type}
         </Typography>
       ),
     },
     {
-      accessorKey: "totalReported",
-      header: "Total reports",
+      accessorKey: 'totalReported',
+      header: 'Total reports',
       size: 144,
-      cell: (value) => (
-        <Typography textTransform={"capitalize"} fontSize={14}>
+      cell: value => (
+        <Typography textTransform={'capitalize'} fontSize={14}>
           {value.row.original.totalReported} reports
         </Typography>
       ),
     },
     {
-      accessorKey: "type",
-      header: "Category",
-      cell: (value) => (
+      accessorKey: 'type',
+      header: 'Category',
+      cell: value => (
         <Typography fontSize={14}>
           {translationText(value.row.original.type as ReportType)}
         </Typography>
       ),
     },
     {
-      accessorKey: "id",
-      header: "Action",
+      accessorKey: 'id',
+      header: 'Action',
       size: 144,
-      cell: (value) => (
-        <Button
-          onClick={() => handleRespond(value.row.original)}
-          label="Respond"
-        />
-      ),
+      cell: value => <Button onClick={() => handleRespond(value.row.original)} label="Respond" />,
     },
   ];
 
@@ -99,7 +93,7 @@ export default function PostResported() {
   };
 
   const filter = JSON.stringify({
-    where: { status: "pending", referenceType: { inq: ["post", "comment"] } },
+    where: {status: 'pending', referenceType: {inq: ['post', 'comment']}},
     order: [`createdAt ${sortingDate}`],
   });
 
@@ -107,12 +101,12 @@ export default function PostResported() {
     refetch: refetchingGetAllPost,
     isFetching,
     data: dataPostReported,
-  } = useQuery(["/getAllPost"], () => getReports({ pageNumber, filter }), {
+  } = useQuery(['/getAllPost'], () => getReports({pageNumber, filter}), {
     enabled: false,
   });
 
   const handleIgnore = async () => {
-    const status = "ignored";
+    const status = 'ignored';
     const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
@@ -126,7 +120,7 @@ export default function PostResported() {
   };
 
   const handleBanned = async () => {
-    const status = "removed";
+    const status = 'removed';
     const response = await mutateUpdateUserStatus({
       status,
       reportId: userSelected?.id!,
@@ -139,12 +133,11 @@ export default function PostResported() {
     }
   };
 
-  const { mutateAsync: mutateUpdateUserStatus, isLoading } =
-    useMutation(updateReports);
+  const {mutateAsync: mutateUpdateUserStatus} = useMutation(updateReports);
 
   useEffect(() => {
     refetchingGetAllPost();
-  }, [sortingDate, pageNumber]);
+  }, [sortingDate, pageNumber, refetchingGetAllPost]);
 
   return (
     <div className="bg-white rounded-[10px] p-6 h-full">
@@ -153,8 +146,8 @@ export default function PostResported() {
           Reported User
         </Typography>
       </div>
-      <Typography fontSize={14} fontWeight={400} color={"#757575"}>
-        {dataPostReported?.meta.totalItemCount ?? "0"} Reports
+      <Typography fontSize={14} fontWeight={400} color={'#757575'}>
+        {dataPostReported?.meta.totalItemCount ?? '0'} Reports
       </Typography>
       <div className="my-6">
         <DropdownFilter
@@ -171,16 +164,13 @@ export default function PostResported() {
           columns={columns}
           meta={dataPostReported?.meta ?? []}
           onClickNext={() => setPageNumber(dataPostReported?.meta.nextPage!)}
-          onClickPrevios={() =>
-            setPageNumber(dataPostReported?.meta.currentPage! - 1)
-          }
+          onClickPrevios={() => setPageNumber(dataPostReported?.meta.currentPage! - 1)}
         />
       </div>
       <Modal
         open={isShowModalRespond}
         onClose={() => setIsShowModalRespond(false)}
-        title={"Respond"}
-      >
+        title={'Respond'}>
         <div className="mt-[20px]">
           <Typography fontSize={14}>Reported user</Typography>
           <div className="mt-[12px]">
@@ -201,43 +191,35 @@ export default function PostResported() {
             <a
               href={`https://app.myriad.social/post/${userSelected?.id}`}
               target="_blank"
-            >
+              rel="noreferrer">
               <button className="w-[20px]">
                 <Image src={IcOpenUrl} height={20} width={20} alt="" />
               </button>
             </a>
           </div>
           <div className="flex items-center justify-center">
-            <div className="w-[120px] text-[14px] text-gray-500">
-              Total reports
-            </div>
-            <div className="flex-1 text-[14px]">
-              {userSelected?.totalReported} report
-            </div>
+            <div className="w-[120px] text-[14px] text-gray-500">Total reports</div>
+            <div className="flex-1 text-[14px]">{userSelected?.totalReported} report</div>
           </div>
         </div>
         <div>
           <div className="mb-4">
             <Typography fontSize={14}>Reporter</Typography>
           </div>
-          {userSelected?.reporters.map((item) => {
+          {userSelected?.reporters.map(item => {
             return (
-              <div className="mb-[24px]">
+              <div key={item.id} className="mb-[24px]">
                 <div className="flex justify-between">
                   <AvatarWithName
                     image={userSelected?.reportedDetail.user.profilePictureURL!}
                     name={item.reportedBy!}
                     desc={item.id!}
                   />
-                  <Typography fontSize={12} color={"#616161"}>
+                  <Typography fontSize={12} color={'#616161'}>
                     16/07/22
                   </Typography>
                 </div>
-                <Typography
-                  fontSize={14}
-                  color={"#0A0A0A"}
-                  style={{ marginLeft: 48, marginTop: 1 }}
-                >
+                <Typography fontSize={14} color={'#0A0A0A'} style={{marginLeft: 48, marginTop: 1}}>
                   {item.description}
                 </Typography>
               </div>

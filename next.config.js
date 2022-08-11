@@ -1,6 +1,4 @@
-const { version } = require("./package.json");
-
-const { NEXT_PUBLIC_API_KEY, NEXT_PUBLIC_API_URL, BUILD_ID } = process.env;
+const {version} = require('./package.json');
 
 /** @type {import('next').NextConfig} */
 
@@ -8,19 +6,18 @@ const moduleExports = {
   reactStrictMode: false,
   swcMinify: true,
   generateBuildId: async () => {
-    if (BUILD_ID) {
-      return BUILD_ID;
+    if (process.env.BUILD_ID) {
+      return process.env.BUILD_ID;
     } else {
       return version;
     }
   },
-  serverRuntimeConfig: {},
-  publicRuntimeConfig: {
-    myriadApiKey: NEXT_PUBLIC_API_KEY ?? "s3cReT",
-    myriadApiUrl: NEXT_PUBLIC_API_URL ?? "http://localhost:3001",
+  serverRuntimeConfig: {
+    myriadAPIURL: process.env.MYRIAD_API_URL ?? 'http://localhost:3001',
+    myriadAPIKey: process.env.MYRIAD_API_KEY ?? 's3cReT',
   },
   images: {
-    domains: ["i.pravatar.cc", "firebasestorage.googleapis.com"],
+    domains: ['i.pravatar.cc', 'firebasestorage.googleapis.com'],
   },
 };
 

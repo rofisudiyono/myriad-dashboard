@@ -1,0 +1,10 @@
+.github
+.next/
+.storybook/
+dist/
+docs/
+node_modules/
+storybook-static/
+.eslintrc.js
+*.tsbuildinfo
+*.json

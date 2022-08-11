@@ -1,10 +1,10 @@
-import { Typography } from "@mui/material";
-import { ColumnDef } from "@tanstack/react-table";
-import { ReactNode } from "react";
-import CardInstanceLeft from "../../../components/molecules/CardInstanceLeft";
-import CardInstanceRight from "../../../components/molecules/CardInstanceRight";
-import Table from "../../../components/organisms/Table";
-import ContentLayout from "../../../layout/ContentLayout";
+import {Typography} from '@mui/material';
+import {ColumnDef} from '@tanstack/react-table';
+import {ReactNode} from 'react';
+import CardInstanceLeft from '../../../components/molecules/CardInstanceLeft';
+import CardInstanceRight from '../../../components/molecules/CardInstanceRight';
+import Table from '../../../components/organisms/Table';
+import ContentLayout from '../../../layout/ContentLayout';
 
 interface DataArtSpaceInterface {
   displayName: string;
@@ -16,67 +16,67 @@ interface DataArtSpaceInterface {
 export default function Instance() {
   const columns: ColumnDef<DataArtSpaceInterface>[] = [
     {
-      accessorKey: "displayName",
-      header: "Reported user",
+      accessorKey: 'displayName',
+      header: 'Reported user',
       size: 268,
     },
     {
-      accessorKey: "username",
-      header: "Username",
+      accessorKey: 'username',
+      header: 'Username',
       size: 120,
     },
     {
-      accessorKey: "date",
-      header: "Date",
+      accessorKey: 'date',
+      header: 'Date',
       size: 120,
     },
     {
-      accessorKey: "walletType",
-      header: "Wallet type",
+      accessorKey: 'walletType',
+      header: 'Wallet type',
       size: 120,
     },
     {
-      accessorKey: "walletAddress",
-      header: "Wallet address",
+      accessorKey: 'walletAddress',
+      header: 'Wallet address',
       size: 120,
     },
   ];
 
   const data: DataArtSpaceInterface[] = [
     {
-      displayName: "Raplh Edwards",
-      username: "@raphedwars",
-      date: "22 Juli 2022",
-      walletType: "Polkadot.js",
-      walletAddress: "0x1234...abcd",
+      displayName: 'Raplh Edwards',
+      username: '@raphedwars',
+      date: '22 Juli 2022',
+      walletType: 'Polkadot.js',
+      walletAddress: '0x1234...abcd',
     },
     {
-      displayName: "Raplh Edwards",
-      username: "@raphedwars",
-      date: "22 Juli 2022",
-      walletType: "Polkadot.js",
-      walletAddress: "0x1234...abcd",
+      displayName: 'Raplh Edwards',
+      username: '@raphedwars',
+      date: '22 Juli 2022',
+      walletType: 'Polkadot.js',
+      walletAddress: '0x1234...abcd',
     },
     {
-      displayName: "Raplh Edwards",
-      username: "@raphedwars",
-      date: "22 Juli 2022",
-      walletType: "Polkadot.js",
-      walletAddress: "0x1234...abcd",
+      displayName: 'Raplh Edwards',
+      username: '@raphedwars',
+      date: '22 Juli 2022',
+      walletType: 'Polkadot.js',
+      walletAddress: '0x1234...abcd',
     },
     {
-      displayName: "Raplh Edwards",
-      username: "@raphedwars",
-      date: "22 Juli 2022",
-      walletType: "Polkadot.js",
-      walletAddress: "0x1234...abcd",
+      displayName: 'Raplh Edwards',
+      username: '@raphedwars',
+      date: '22 Juli 2022',
+      walletType: 'Polkadot.js',
+      walletAddress: '0x1234...abcd',
     },
     {
-      displayName: "Raplh Edwards",
-      username: "@raphedwars",
-      date: "22 Juli 2022",
-      walletType: "Polkadot.js",
-      walletAddress: "0x1234...abcd",
+      displayName: 'Raplh Edwards',
+      username: '@raphedwars',
+      date: '22 Juli 2022',
+      walletType: 'Polkadot.js',
+      walletAddress: '0x1234...abcd',
     },
   ];
 
@@ -92,7 +92,7 @@ export default function Instance() {
             Art Space users
           </Typography>
         </div>
-        <Typography fontSize={14} fontWeight={400} color={"#757575"}>
+        <Typography fontSize={14} fontWeight={400} color={'#757575'}>
           3 new users in 24h
         </Typography>
         <div className="mt-6 h-[420px]">

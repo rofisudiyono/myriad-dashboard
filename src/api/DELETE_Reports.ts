@@ -1,12 +1,10 @@
-import getConfig from "next/config";
-import axios from "./axiosInstance";
-const { publicRuntimeConfig } = getConfig();
+import axios from './axiosInstance';
 
-export const deleteReports = async ({ reportId }: { reportId: string }) => {
+export const deleteReports = async ({reportId}: {reportId: string}) => {
   return axios
     .delete(`/reports/${reportId}`)
-    .then((response) => {
+    .then(response => {
       return response.data;
     })
-    .catch((e) => console.log(e.response.data));
+    .catch(e => console.log(e.response.data));
 };

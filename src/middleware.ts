@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getHealtcheck } from "./api/GET_Healtcheck";
+import {NextRequest, NextResponse} from 'next/server';
 
 export async function middleware(request: NextRequest, response: NextResponse) {
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
     return NextResponse.next();
   }
 }

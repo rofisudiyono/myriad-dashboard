@@ -1,14 +1,22 @@
 {
-  "name": "myriad-dashboard-v2",
-  "version": "0.1.1",
+  "name": "myriad-dashboard",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prettier:cli": "prettier",
+    "prettier:check": "yarn run prettier:cli -l .",
+    "prettier:fix": "yarn run prettier:cli --write .",
+    "lint": "next lint",
+    "lint:check": "yarn run lint --report-unused-disable-directives error",
+    "lint:fix": "yarn run lint --fix && yarn run prettier:fix",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook:build": "build-storybook",
+    "storybook:start": "start-storybook -p 6006",
+    "docker:build": "./.maintain/docker/build-image.sh",
+    "docker:run": "./.maintain/docker/start-docker-compose.sh",
+    "docker:down": "./.maintain/docker/stop-docker-compose.sh"
   },
   "dependencies": {
     "@emotion/react": "^11.10.0",
@@ -48,10 +56,12 @@
     "@types/node": "18.6.2",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
     "autoprefixer": "^10.4.8",
     "babel-loader": "^8.2.5",
     "eslint": "8.20.0",
     "eslint-config-next": "12.2.3",
+    "eslint-config-prettier": "^8.5.0",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.7",
     "typescript": "4.7.4"

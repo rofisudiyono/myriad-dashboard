@@ -1,6 +1,5 @@
-import { ReactNode, useEffect } from "react";
-import { getHealtcheck } from "../../api/GET_Healtcheck";
-import ContentLayout from "../../layout/ContentLayout";
+import {ReactNode} from 'react';
+import ContentLayout from '../../layout/ContentLayout';
 
 export default function Dashboard() {
   return (
