@@ -35,7 +35,7 @@ const CardEditInstance = () => {
         </div>
         <TextField id="outlined-basic" label="Wallet Address" variant="outlined" fullWidth />
         <div className="my-[24px]">
-          <TextField label="Description" multiline rows={3} maxRows={4} fullWidth />
+          <TextField label="Description" multiline rows={3} fullWidth />
         </div>
         <div className="flex">
           <div className="mr-[10px]">

@@ -3,14 +3,6 @@ import CardEditInstance from '../../../components/molecules/CardEditInstance';
 import CardInstanceRight from '../../../components/molecules/CardInstanceRight';
 import ContentLayout from '../../../layout/ContentLayout';
 
-// TODO: uncomment when it used
-// interface DataArtSpaceInterface {
-//   displayName: string;
-//   username: string;
-//   date: string;
-//   walletType: string;
-//   walletAddress: string;
-// }
 export default function EditInstance() {
   return (
     <div className="h-full">
