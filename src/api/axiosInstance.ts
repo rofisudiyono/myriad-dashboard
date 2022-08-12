@@ -1,12 +1,12 @@
 import axios from 'axios';
 import getConfig from 'next/config';
 
-const {serverRuntimeConfig} = getConfig();
+const {publicRuntimeConfig} = getConfig();
 
 const instance = axios.create({
-  baseURL: `${serverRuntimeConfig.myriadAPIURL}`,
+  baseURL: `${publicRuntimeConfig.myriadAPIURL}`,
   headers: {
-    Authorization: `Bearer ${serverRuntimeConfig.myriadAPIKey}`,
+    Authorization: `Bearer ${publicRuntimeConfig.myriadAPIKey}`,
   },
 });
 

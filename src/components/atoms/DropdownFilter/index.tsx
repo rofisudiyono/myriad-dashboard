@@ -26,7 +26,8 @@ const DropdownFilter = (props: DropdownFilterInterface) => {
         disableUnderline
         style={{fontSize: 14}}
         size="small"
-        defaultValue={value}>
+        // defaultValue={value}
+      >
         {data.map((item, index) => {
           return (
             <option key={index} value={item.value}>
