@@ -117,9 +117,3 @@ jobs:
               --set autoscaling.maxReplicas=100 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/myriad-dashboard
-      - name: Sleuth webhook
-        shell: bash
-        run: |
-          curl -X POST -d api_key=${{ secrets.SLEUTH_API_KEY }} \
-          -d environment=${{ secrets.MAINNET_SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ secrets.WEB_SLEUTH_WEBHOOK }}
