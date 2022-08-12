@@ -14,8 +14,8 @@ const moduleExports = {
   },
   serverRuntimeConfig: {},
   publicRuntimeConfig: {
-    myriadAPIURL: process.env.MYRIAD_API_URL ?? 'http://localhost:3001',
-    myriadAPIKey: process.env.MYRIAD_API_KEY ?? 's3cReT',
+    myriadAPIURL: process.env.NEXT_PUBLIC_MYRIAD_API_URL ?? 'http://localhost:3001',
+    myriadAPIKey: process.env.NEXT_PUBLIC_MYRIAD_API_KEY ?? 's3cReT',
   },
   images: {
     domains: ['i.pravatar.cc', 'firebasestorage.googleapis.com'],
