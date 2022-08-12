@@ -1,12 +1,11 @@
 import {Typography} from '@mui/material';
-import {ReactNode, useEffect, useState} from 'react';
+import {ReactNode, useState} from 'react';
 import {
   NotificationJoinInstance,
   NotificationsDeployNode,
   NotificationsReportPost,
   NotificationsReportUser,
 } from '../../../../public/icons';
-import {getNotifications} from '../../../api/GET_Notifications';
 import {DropdownFilter, ListAllNotifications} from '../../../components/atoms';
 import ContentLayout from '../../../layout/ContentLayout';
 
@@ -22,14 +21,6 @@ export default function Notification() {
       title: 'Olders',
     },
   ];
-
-  const callDataNotifications = async () => {
-    const response = await getNotifications();
-  };
-
-  useEffect(() => {
-    callDataNotifications;
-  }, []);
 
   return (
     <div className="flex">

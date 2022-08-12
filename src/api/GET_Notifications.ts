@@ -1,4 +1,3 @@
-import {AxiosResponse} from 'axios';
 import axios from './axiosInstance';
 
 export const getNotifications = async () => {
