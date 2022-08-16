@@ -1,41 +1,39 @@
 import {List} from '@mui/material';
-import Cookies from 'js-cookie';
-import type {NextPage} from 'next';
 import Image from 'next/image';
 import {useRouter} from 'next/router';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Logo} from '../../../../public/icons';
+import {NavigationInterface, SubmenuItemInterface} from '../../../interface/NavigationInterface';
 import {Navigation} from '../../../navigations';
 import ListSidebar from '../../atoms/ListSidebar';
 import SubListSidebar from '../../atoms/SubListSidebar';
-const Siderbar: NextPage = () => {
+
+const Siderbar = () => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
-  const [selectedListItemIndex, setSelectedListItemIndex] = useState<number>(0);
-  const [selectedSubListItemIndex, setSelectedSubListItemIndex] = useState<number>(0);
+  const [mainMenu, setMainMenu] = useState('');
+  console.log(mainMenu);
 
-  const handleListItemClick = (item: any, index: number) => {
+  const handleListItemClick = (item: NavigationInterface) => {
     router.push(item.link);
-    setOpen(selectedListItemIndex === index ? !open : true);
-    setSelectedListItemIndex(index);
-    setSelectedSubListItemIndex(0);
-    Cookies.set('active_menu', index.toString());
-    Cookies.set('active_sub_menu', '0');
+    setOpen(true);
   };
 
-  const handleSubItemClick = (item: any, index: number) => {
-    Cookies.set('active_sub_menu', index.toString());
+  const handleSubItemClick = (item: SubmenuItemInterface) => {
     router.push(item.link);
-    setSelectedSubListItemIndex(index);
   };
+
+  const getMainMenu = useCallback(() => {
+    const url = router.pathname.split('/');
+    console.log('url', url);
+    const dataUrl = '/' + url[1] + '/' + url[2];
+    setMainMenu(dataUrl);
+  }, [router.pathname]);
 
   useEffect(() => {
-    if (!Cookies.get('active_menu')) return;
-    else {
-      setSelectedListItemIndex(parseInt(Cookies.get('active_menu')!));
-      setSelectedSubListItemIndex(parseInt(Cookies.get('active_sub_menu')!));
-    }
-  }, [Cookies.get('active_menu')]);
+    if (router.pathname.split('/').length === 4) getMainMenu();
+    else setMainMenu(router.pathname);
+  }, [router.pathname, getMainMenu]);
 
   return (
     <>
@@ -47,23 +45,28 @@ const Siderbar: NextPage = () => {
           return (
             <div key={index}>
               <ListSidebar
-                onClick={() => handleListItemClick(menuItem, index)}
+                onClick={() => handleListItemClick(menuItem)}
                 image={menuItem.icon}
                 title={menuItem.title}
-                isSelected={selectedListItemIndex === index}
-                isShowSubMenu={menuItem.subMenu && open && selectedListItemIndex === index}
+                isSelected={
+                  menuItem.subMenu ? menuItem.link === mainMenu : menuItem.link === router.pathname
+                }
+                isShowSubMenu={
+                  (menuItem.subMenu && open && menuItem.link === router.pathname) ||
+                  menuItem.link === mainMenu
+                }
                 isHaveSubMenu={menuItem.subMenu}
               />
 
-              {menuItem.subMenu && selectedListItemIndex === index
+              {(menuItem.subMenu && menuItem.link === router.pathname) || menuItem.link === mainMenu
                 ? menuItem.subMenuItems.map((subMenuItem, index) => {
                     return (
                       <SubListSidebar
                         key={index}
                         title={subMenuItem.title}
                         inOpen={open}
-                        isSelected={selectedSubListItemIndex === index}
-                        onClick={() => handleSubItemClick(subMenuItem, index)}
+                        isSelected={subMenuItem.link === router.pathname}
+                        onClick={() => handleSubItemClick(subMenuItem)}
                       />
                     );
                   })

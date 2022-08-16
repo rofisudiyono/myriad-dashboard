@@ -1,8 +1,12 @@
 import axios from './axiosInstance';
 
-export const getNotifications = async () => {
+export const getNotifications = async (filter: any) => {
   return axios
-    .get(`/notifications`)
+    .get(`/notifications`, {
+      params: {
+        filter,
+      },
+    })
     .then(response => {
       return response.data;
     })

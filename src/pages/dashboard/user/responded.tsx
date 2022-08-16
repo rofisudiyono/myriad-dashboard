@@ -142,9 +142,9 @@ export default function UserResponded() {
           <Typography fontSize={14}>Reported user</Typography>
           <div className="mt-[12px]">
             <AvatarWithName
-              image={userSelected?.reportedDetail.user.profilePictureURL!}
-              name={userSelected?.reportedDetail.user.name!}
-              desc={userSelected?.reportedDetail.user.username!}
+              image={userSelected?.reportedDetail.user.profilePictureURL as string}
+              name={userSelected?.reportedDetail.user.name as string}
+              desc={userSelected?.reportedDetail.user.username as string}
             />
           </div>
         </div>

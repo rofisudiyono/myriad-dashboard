@@ -1,26 +1,49 @@
-import {Typography} from '@mui/material';
-import {ReactNode, useState} from 'react';
-import {
-  NotificationJoinInstance,
-  NotificationsDeployNode,
-  NotificationsReportPost,
-  NotificationsReportUser,
-} from '../../../../public/icons';
+import {CircularProgress, Typography} from '@mui/material';
+import {useQuery} from '@tanstack/react-query';
+import {ReactNode, useEffect, useState} from 'react';
+import {getNotifications} from '../../../api/GET_Notifications';
 import {DropdownFilter, ListAllNotifications} from '../../../components/atoms';
+import {Arrays} from '../../../constans/array';
+import {
+  MetaNotificationInterface,
+  NotificationDataInterface,
+} from '../../../interface/NotificationsInterface';
 import ContentLayout from '../../../layout/ContentLayout';
+import {colors} from '../../../utils';
+import {dateFormatter} from '../../../utils/dateFormatter';
 
+type FilterType = 'report_post' | 'report_user' | 'report_comment' | 'all';
 export default function Notification() {
-  const [sortingDate, setSortingDate] = useState<string>('DESC');
-  const dataFilter = [
-    {
-      value: 'DESC',
-      title: 'Newest',
+  const [dataNotification, setDataNotification] = useState<Array<NotificationDataInterface>>([]);
+  const [metaNotification, setMetaNotification] = useState<MetaNotificationInterface>();
+  const [filterReport, setFilterReport] = useState<FilterType>('all');
+
+  const filter = {
+    where: {
+      type: {
+        inq:
+          filterReport === 'all'
+            ? ['report_post', 'report_user', 'report_comment']
+            : [filterReport],
+      },
     },
+  };
+
+  const {refetch: refetchingGetNotification, isFetching} = useQuery(
+    ['/getNotification'],
+    () => getNotifications(filter),
     {
-      value: 'ASC',
-      title: 'Olders',
+      enabled: false,
+      onSuccess: data => {
+        setDataNotification(data?.data);
+        setMetaNotification(data?.meta);
+      },
     },
-  ];
+  );
+
+  useEffect(() => {
+    refetchingGetNotification();
+  }, [filterReport, refetchingGetNotification]);
 
   return (
     <div className="flex">
@@ -31,40 +54,54 @@ export default function Notification() {
           </Typography>
         </div>
         <Typography fontSize={14} fontWeight={400} color={'#757575'}>
-          0 notifications
+          {metaNotification?.totalItemCount} notifications
         </Typography>
         <div className="my-6">
           <DropdownFilter
-            label="Filter All"
-            data={dataFilter ?? []}
-            value={sortingDate}
-            onChange={(event: any) => setSortingDate(event.target.value)}
+            label="Filter"
+            data={Arrays.notificationFilter ?? []}
+            value={filterReport}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+              setFilterReport(event.target.value as FilterType)
+            }
           />
         </div>
-        <ListAllNotifications
-          image={NotificationsReportUser}
-          label={'Diana Ukrainsky was reported by Heizel Brown'}
-          desc={'User report'}
-          time={'Now'}
-        />
-        <ListAllNotifications
-          image={NotificationsReportPost}
-          label={'Diana Ukrainsky’s post was reported by Heizel Brown'}
-          desc={'Post report'}
-          time={'Now'}
-        />
-        <ListAllNotifications
-          image={NotificationJoinInstance}
-          label={'Nicholas Saputra join Art Space Instance'}
-          desc={'Join instance'}
-          time={'Now'}
-        />
-        <ListAllNotifications
-          image={NotificationsDeployNode}
-          label={'0xabcd...1234 deploy a node'}
-          desc={'Deploy a node'}
-          time={'Now'}
-        />
+        {!isFetching && dataNotification.toString().length === 0 && (
+          <div className="h-[300px] w-full flex items-center justify-center">
+            <div>
+              <Typography style={{fontSize: 18, fontWeight: 600, textAlign: 'center'}}>
+                You have no notification
+              </Typography>
+              <Typography
+                style={{
+                  fontSize: 14,
+                  fontWeight: 400,
+                  color: colors.textGray,
+                  textAlign: 'center',
+                }}>
+                Notifications will be shown here. You can change the type of notification that
+                appears in Settings.
+              </Typography>
+            </div>
+          </div>
+        )}
+
+        {isFetching ? (
+          <div className="h-[300px] w-full flex items-center justify-center">
+            <CircularProgress />
+          </div>
+        ) : (
+          dataNotification.map((item, index) => {
+            return (
+              <ListAllNotifications
+                key={index}
+                label={item.message}
+                desc={item.type}
+                time={dateFormatter(new Date(item.updatedAt), 'dd MMMM yyyy')}
+              />
+            );
+          })
+        )}
       </div>
       <div className="bg-white w-[314px] rounded-[10px] p-6 h-fit">
         <Typography fontSize={14} fontWeight={600}>

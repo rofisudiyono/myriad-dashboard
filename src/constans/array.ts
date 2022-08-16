@@ -37,4 +37,30 @@ export const Arrays = {
       title: 'Comment',
     },
   ],
+  notificationFilter: [
+    {
+      value: 'all',
+      title: 'All',
+    },
+    {
+      value: 'report_user',
+      title: 'User report',
+    },
+    {
+      value: 'report_comment',
+      title: 'User comment',
+    },
+    {
+      value: 'report_port',
+      title: 'Post report',
+    },
+    {
+      value: 'new_user',
+      title: 'New user',
+    },
+    {
+      value: 'new_node',
+      title: 'New node',
+    },
+  ],
 };

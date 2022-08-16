@@ -109,7 +109,7 @@ export default function PostResported() {
     const status = 'ignored';
     const response = await mutateUpdateUserStatus({
       status,
-      reportId: userSelected?.id!,
+      reportId: userSelected?.id ?? '',
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
@@ -123,7 +123,7 @@ export default function PostResported() {
     const status = 'removed';
     const response = await mutateUpdateUserStatus({
       status,
-      reportId: userSelected?.id!,
+      reportId: userSelected?.id ?? '',
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
@@ -154,7 +154,9 @@ export default function PostResported() {
           label="Report Date"
           data={Arrays.dataFilter ?? []}
           value={sortingDate}
-          onChange={(event: any) => setSortingDate(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setSortingDate(event.target.value)
+          }
         />
       </div>
       <div className="">
@@ -175,9 +177,9 @@ export default function PostResported() {
           <Typography fontSize={14}>Reported user</Typography>
           <div className="mt-[12px]">
             <AvatarWithName
-              image={userSelected?.reportedDetail.user.profilePictureURL!}
-              name={userSelected?.reportedDetail.user.name!}
-              desc={userSelected?.reportedDetail.user.username!}
+              image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
+              name={userSelected?.reportedDetail.user.name ?? ''}
+              desc={userSelected?.reportedDetail.user.username ?? ''}
             />
           </div>
         </div>
