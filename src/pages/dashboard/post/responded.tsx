@@ -128,7 +128,7 @@ export default function PostResponded() {
   );
 
   const handleRestore = async () => {
-    const response = await mutateDeleteUser({reportId: userSelected?.id!});
+    const response = await mutateDeleteUser({reportId: userSelected?.id ?? ''});
     if (response) {
       setIsShowModalRespond(false);
       refetchingGetAllResponded();
@@ -160,32 +160,37 @@ export default function PostResponded() {
             label="Report date"
             data={Arrays.dataFilter ?? []}
             value={sortingDate}
-            onChange={(event: any) => setSortingDate(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+              setSortingDate(event.target.value)
+            }
           />
         </div>
         <DropdownFilter
           label="Post status"
           data={Arrays.dataFilterStatus ?? []}
           value={sortingPostStatus}
-          onChange={(event: any) => setSortingPostStatus(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setSortingPostStatus(event.target.value)
+          }
         />
         <div className="px-4">
           <DropdownFilter
             label="Type"
             data={Arrays.dataFilterType ?? []}
             value={sortingPostType}
-            onChange={(event: any) => setSortingPostType(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+              setSortingPostType(event.target.value)
+            }
           />
         </div>
       </div>
       <div className="">
         <Table
-          // isFetching={isFetching}
           data={dataPostResponded?.data ?? []}
           columns={columns}
           meta={dataPostResponded?.meta ?? []}
-          onClickNext={() => setPageNumber(dataPostResponded?.meta.nextPage!)}
-          onClickPrevios={() => setPageNumber(dataPostResponded?.meta.currentPage! - 1)}
+          onClickNext={() => setPageNumber(dataPostResponded?.meta.nextPage ?? 1)}
+          onClickPrevios={() => setPageNumber((dataPostResponded?.meta.currentPage ?? 2) - 1)}
         />
       </div>
       <Modal
@@ -196,9 +201,9 @@ export default function PostResponded() {
           <Typography fontSize={14}>Reported user</Typography>
           <div className="mt-[12px]">
             <AvatarWithName
-              image={userSelected?.reportedDetail.user.profilePictureURL!}
-              name={userSelected?.reportedDetail.user.name!}
-              desc={userSelected?.reportedDetail.user.username!}
+              image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
+              name={userSelected?.reportedDetail.user.name ?? ''}
+              desc={userSelected?.reportedDetail.user.username ?? ''}
             />
           </div>
         </div>
@@ -232,9 +237,9 @@ export default function PostResponded() {
               <div key={item.id} className="mb-[24px]">
                 <div className="flex justify-between">
                   <AvatarWithName
-                    image={userSelected?.reportedDetail.user.profilePictureURL!}
-                    name={item.reportedBy!}
-                    desc={item.id!}
+                    image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
+                    name={item.reportedBy ?? ''}
+                    desc={item.id ?? ''}
                   />
                   <Typography fontSize={12} color={'#616161'}>
                     16/07/22

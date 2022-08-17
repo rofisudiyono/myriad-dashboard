@@ -56,7 +56,7 @@ export default function PostResported() {
       size: 144,
       cell: value => (
         <Typography textTransform={'capitalize'} fontSize={14}>
-          {value.row.original.type}
+          {value.row.original.type.replace('_', ' ')}
         </Typography>
       ),
     },
@@ -165,8 +165,8 @@ export default function PostResported() {
           data={dataPostReported?.data ?? []}
           columns={columns}
           meta={dataPostReported?.meta ?? []}
-          onClickNext={() => setPageNumber(dataPostReported?.meta.nextPage!)}
-          onClickPrevios={() => setPageNumber(dataPostReported?.meta.currentPage! - 1)}
+          onClickNext={() => setPageNumber(dataPostReported?.meta.nextPage ?? 1)}
+          onClickPrevios={() => setPageNumber((dataPostReported?.meta.currentPage ?? 2) - 1)}
         />
       </div>
       <Modal
@@ -213,9 +213,9 @@ export default function PostResported() {
               <div key={item.id} className="mb-[24px]">
                 <div className="flex justify-between">
                   <AvatarWithName
-                    image={userSelected?.reportedDetail.user.profilePictureURL!}
-                    name={item.reportedBy!}
-                    desc={item.id!}
+                    image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
+                    name={item.reportedBy ?? ''}
+                    desc={item.id ?? ''}
                   />
                   <Typography fontSize={12} color={'#616161'}>
                     16/07/22

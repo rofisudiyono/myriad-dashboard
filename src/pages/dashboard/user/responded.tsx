@@ -90,7 +90,7 @@ export default function UserResponded() {
   });
 
   const handleRestore = async () => {
-    const response = await mutateDeleteUser({reportId: userSelected?.id!});
+    const response = await mutateDeleteUser({reportId: userSelected?.id ?? ''});
     if (response) {
       setIsShowModalRespond(false);
       refetchingGetAllUser();
@@ -121,7 +121,9 @@ export default function UserResponded() {
           label="Report Date"
           data={Arrays.dataFilter ?? []}
           value={sortingDate}
-          onChange={(event: any) => setSortingDate(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setSortingDate(event.target.value)
+          }
         />
       </div>
       <div className="">
@@ -129,8 +131,8 @@ export default function UserResponded() {
           data={dataUserResponded?.data ?? []}
           columns={columns}
           meta={dataUserResponded?.meta ?? []}
-          onClickNext={() => setPageNumber(dataUserResponded?.meta.nextPage!)}
-          onClickPrevios={() => setPageNumber(dataUserResponded?.meta.currentPage! - 1)}
+          onClickNext={() => setPageNumber(dataUserResponded?.meta.nextPage ?? 1)}
+          onClickPrevios={() => setPageNumber((dataUserResponded?.meta.currentPage ?? 2) - 1)}
           isFetching={isFetching}
         />
       </div>
@@ -178,9 +180,9 @@ export default function UserResponded() {
               <div key={item.id} className="mb-[24px]">
                 <div className="flex justify-between">
                   <AvatarWithName
-                    image={userSelected?.reportedDetail.user.profilePictureURL!}
-                    name={item.reportedBy!}
-                    desc={item.id!}
+                    image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
+                    name={item.reportedBy ?? ''}
+                    desc={item.id ?? ''}
                   />
                   <Typography fontSize={12} color={'#616161'}>
                     16/07/22

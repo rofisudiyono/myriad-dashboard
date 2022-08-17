@@ -84,7 +84,7 @@ export default function UserReported() {
     const status = 'ignored';
     const response = await mutateUpdateUserStatus({
       status,
-      reportId: userSelected?.id!,
+      reportId: userSelected?.id ?? '',
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
@@ -98,7 +98,7 @@ export default function UserReported() {
     const status = 'removed';
     const response = await mutateUpdateUserStatus({
       status,
-      reportId: userSelected?.id!,
+      reportId: userSelected?.id ?? '',
     });
     if (response.statusCode === 401) {
       setIsShowModalRespond(false);
@@ -137,7 +137,9 @@ export default function UserReported() {
           label="Report Date"
           data={Arrays.dataFilter ?? []}
           value={sortingDate}
-          onChange={(event: any) => setSortingDate(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setSortingDate(event.target.value)
+          }
         />
       </div>
       <div className="">
@@ -146,8 +148,8 @@ export default function UserReported() {
           data={dataUserReported?.data ?? []}
           columns={columns}
           meta={dataUserReported?.meta ?? []}
-          onClickNext={() => setPageNumber(dataUserReported?.meta.nextPage!)}
-          onClickPrevios={() => setPageNumber(dataUserReported?.meta.currentPage! - 1)}
+          onClickNext={() => setPageNumber(dataUserReported?.meta.nextPage ?? 1)}
+          onClickPrevios={() => setPageNumber((dataUserReported?.meta.currentPage ?? 1) - 1)}
         />
       </div>
       <Modal
@@ -158,9 +160,9 @@ export default function UserReported() {
           <Typography fontSize={14}>Reported user</Typography>
           <div className="mt-[12px]">
             <AvatarWithName
-              image={userSelected?.reportedDetail.user.profilePictureURL!}
-              name={userSelected?.reportedDetail.user.name!}
-              desc={userSelected?.reportedDetail.user.username!}
+              image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
+              name={userSelected?.reportedDetail.user.name ?? ''}
+              desc={userSelected?.reportedDetail.user.username ?? ''}
             />
           </div>
         </div>

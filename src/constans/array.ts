@@ -58,9 +58,5 @@ export const Arrays = {
       value: 'new_user',
       title: 'New user',
     },
-    {
-      value: 'new_node',
-      title: 'New node',
-    },
   ],
 };

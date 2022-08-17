@@ -5,6 +5,7 @@ import {getNotifications} from '../../../api/GET_Notifications';
 import {DropdownFilter, ListAllNotifications} from '../../../components/atoms';
 import {Arrays} from '../../../constans/array';
 import {
+  FilterType,
   MetaNotificationInterface,
   NotificationDataInterface,
 } from '../../../interface/NotificationsInterface';
@@ -12,11 +13,11 @@ import ContentLayout from '../../../layout/ContentLayout';
 import {colors} from '../../../utils';
 import {dateFormatter} from '../../../utils/dateFormatter';
 
-type FilterType = 'report_post' | 'report_user' | 'report_comment' | 'all';
 export default function Notification() {
   const [dataNotification, setDataNotification] = useState<Array<NotificationDataInterface>>([]);
   const [metaNotification, setMetaNotification] = useState<MetaNotificationInterface>();
   const [filterReport, setFilterReport] = useState<FilterType>('all');
+  console.log(filterReport);
 
   const filter = {
     where: {
@@ -49,13 +50,14 @@ export default function Notification() {
     <div className="flex">
       <div className="bg-white flex-1 mr-6 p-6 rounded-[10px] min-h-[480px]">
         <div className="mb-[5px]">
-          <Typography fontWeight={600} fontSize={18}>
-            All notifications
+          <Typography fontWeight={600} fontSize={18} textTransform="capitalize">
+            {filterReport === 'all' ? 'All notifications' : filterReport.replace('_', ' ')}
           </Typography>
         </div>
         <Typography fontSize={14} fontWeight={400} color={'#757575'}>
           {metaNotification?.totalItemCount} notifications
         </Typography>
+
         <div className="my-6">
           <DropdownFilter
             label="Filter"
@@ -102,51 +104,6 @@ export default function Notification() {
             );
           })
         )}
-      </div>
-      <div className="bg-white w-[314px] rounded-[10px] p-6 h-fit">
-        <Typography fontSize={14} fontWeight={600}>
-          Detail
-        </Typography>
-        <div className="flex">
-          <div className="flex-1 py-2">
-            <Typography fontSize={14} fontWeight={400}>
-              Post report
-            </Typography>
-          </div>
-          <Typography fontSize={14} fontWeight={400}>
-            0
-          </Typography>
-        </div>
-        <div className="flex">
-          <div className="flex-1 py-2">
-            <Typography fontSize={14} fontWeight={400}>
-              User report
-            </Typography>
-          </div>
-          <Typography fontSize={14} fontWeight={400}>
-            0
-          </Typography>
-        </div>
-        <div className="flex">
-          <div className="flex-1 py-2">
-            <Typography fontSize={14} fontWeight={400}>
-              New user
-            </Typography>
-          </div>
-          <Typography fontSize={14} fontWeight={400}>
-            0
-          </Typography>
-        </div>
-        <div className="flex">
-          <div className="flex-1 py-2">
-            <Typography fontSize={14} fontWeight={400}>
-              New node
-            </Typography>
-          </div>
-          <Typography fontSize={14} fontWeight={400}>
-            0
-          </Typography>
-        </div>
       </div>
     </div>
   );
