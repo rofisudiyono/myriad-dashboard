@@ -3,6 +3,7 @@ import {useQuery} from '@tanstack/react-query';
 import {ReactNode, useEffect, useState} from 'react';
 import {getNotifications} from '../../../api/GET_Notifications';
 import {DropdownFilter, ListAllNotifications} from '../../../components/atoms';
+import EmptyState from '../../../components/molecules/EmptyState';
 import {Arrays} from '../../../constans/array';
 import {
   FilterType,
@@ -10,14 +11,13 @@ import {
   NotificationDataInterface,
 } from '../../../interface/NotificationsInterface';
 import ContentLayout from '../../../layout/ContentLayout';
-import {colors} from '../../../utils';
 import {dateFormatter} from '../../../utils/dateFormatter';
 
 export default function Notification() {
   const [dataNotification, setDataNotification] = useState<Array<NotificationDataInterface>>([]);
   const [metaNotification, setMetaNotification] = useState<MetaNotificationInterface>();
   const [filterReport, setFilterReport] = useState<FilterType>('all');
-  console.log(filterReport);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   const filter = {
     where: {
@@ -32,7 +32,7 @@ export default function Notification() {
 
   const {refetch: refetchingGetNotification, isFetching} = useQuery(
     ['/getNotification'],
-    () => getNotifications(filter),
+    () => getNotifications({pageNumber, filter}),
     {
       enabled: false,
       onSuccess: data => {
@@ -44,50 +44,36 @@ export default function Notification() {
 
   useEffect(() => {
     refetchingGetNotification();
-  }, [filterReport, refetchingGetNotification]);
+  }, [filterReport, refetchingGetNotification, pageNumber]);
 
   return (
-    <div className="flex">
-      <div className="bg-white flex-1 mr-6 p-6 rounded-[10px] min-h-[480px]">
-        <div className="mb-[5px]">
-          <Typography fontWeight={600} fontSize={18} textTransform="capitalize">
-            {filterReport === 'all' ? 'All notifications' : filterReport.replace('_', ' ')}
-          </Typography>
-        </div>
-        <Typography fontSize={14} fontWeight={400} color={'#757575'}>
-          {metaNotification?.totalItemCount} notifications
+    <div className="bg-white mr-6 p-6 rounded-[10px] h-min-[480px]">
+      <div className="mb-[5px]">
+        <Typography fontWeight={600} fontSize={18} textTransform="capitalize">
+          {filterReport === 'all' ? 'All notifications' : filterReport.replace('_', ' ')}
         </Typography>
+      </div>
+      <Typography fontSize={14} fontWeight={400} color={'#757575'}>
+        {metaNotification?.totalItemCount} notifications
+      </Typography>
 
-        <div className="my-6">
-          <DropdownFilter
-            label="Filter"
-            data={Arrays.notificationFilter ?? []}
-            value={filterReport}
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-              setFilterReport(event.target.value as FilterType)
-            }
-          />
-        </div>
+      <div className="my-6">
+        <DropdownFilter
+          label="Filter"
+          data={Arrays.notificationFilter ?? []}
+          value={filterReport}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setFilterReport(event.target.value as FilterType)
+          }
+        />
+      </div>
+
+      <div className="min-h-[350px]">
         {!isFetching && dataNotification.toString().length === 0 && (
           <div className="h-[300px] w-full flex items-center justify-center">
-            <div>
-              <Typography style={{fontSize: 18, fontWeight: 600, textAlign: 'center'}}>
-                You have no notification
-              </Typography>
-              <Typography
-                style={{
-                  fontSize: 14,
-                  fontWeight: 400,
-                  color: colors.textGray,
-                  textAlign: 'center',
-                }}>
-                Notifications will be shown here. You can change the type of notification that
-                appears in Settings.
-              </Typography>
-            </div>
+            <EmptyState />
           </div>
         )}
-
         {isFetching ? (
           <div className="h-[300px] w-full flex items-center justify-center">
             <CircularProgress />
@@ -105,6 +91,24 @@ export default function Notification() {
           })
         )}
       </div>
+      {(metaNotification?.currentPage ?? 0) > 0 && (
+        <div className="flex items-center gap-2 justify-end mb-[10px] text-[14px] mt-4">
+          {metaNotification?.currentPage !== 1 && (
+            <button onClick={() => setPageNumber(pageNumber - 1)} className="text-slate-600">
+              {'<'}
+            </button>
+          )}
+          <div className="h-[28px] w-[28px] rounded-md border-2 items-center justify-center flex ring-slate-600 px-2">
+            {metaNotification?.currentPage}
+          </div>
+          <div>of {metaNotification?.totalPageCount}</div>
+          {metaNotification?.totalPageCount === metaNotification?.currentPage ? null : (
+            <button onClick={() => setPageNumber(pageNumber + 1)} className="text-slate-600">
+              {'>'}
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

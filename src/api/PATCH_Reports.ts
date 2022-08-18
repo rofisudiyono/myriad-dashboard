@@ -12,7 +12,7 @@ export const updateReports = async ({reportId, status}: {reportId: string; statu
       },
       {
         headers: {
-          Authorization: publicRuntimeConfig.myriadAPIKey,
+          Authorization: `Bearer ${publicRuntimeConfig.myriadAPIKey}`,
         },
       },
     )

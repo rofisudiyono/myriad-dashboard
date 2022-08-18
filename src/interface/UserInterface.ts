@@ -28,17 +28,38 @@ export interface ReportersInterface {
   reportedBy: string;
   updatedAt: string;
 }
+export interface metricInterface {
+  totalExperiences: number;
+  totalFriends: number;
+  totalKudos: number;
+  totalPosts: number;
+}
+export interface ReportsDetailInterface {
+  bannerImageURL: string;
+  createAt: string;
+  id: string;
+  name: string;
+  onTimeline: string;
+  profilePictureURL: string;
+  updatedAt: string;
+  username: string;
+  verified: boolean;
+  fcmTokens: Array<string>;
+  metric: metricInterface;
+}
 export interface DataResponseUserReportedInterface {
   createdAt: string;
   id: string;
   referenceId: string;
   referenceType: string;
   reportedDetail: ReportDetailInterface;
-  reporters: Array<ReportersInterface>;
+  reporters?: ReportersInterface;
+  reporter?: ReportsDetailInterface;
   status: string;
   totalReported: number;
   type: string;
   updatedAt: string;
+  description?: string;
 }
 
 export interface MetaResponseUserReportedInterface {

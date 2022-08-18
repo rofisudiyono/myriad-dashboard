@@ -1,4 +1,4 @@
-import {Typography} from '@mui/material';
+import {CircularProgress, Typography} from '@mui/material';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {ColumnDef} from '@tanstack/react-table';
 import Image from 'next/image';
@@ -6,8 +6,10 @@ import {ReactNode, useEffect, useState} from 'react';
 import {IcOpenUrl} from '../../../../public/icons';
 import {deleteReports} from '../../../api/DELETE_Reports';
 import {getReports} from '../../../api/GET_Reports';
+import {getReportsDetail} from '../../../api/GET_ReportsDetail';
 import {AvatarWithName, DropdownFilter} from '../../../components/atoms';
 import Button from '../../../components/atoms/Button';
+import ListReporter from '../../../components/atoms/ListReporter';
 import Modal from '../../../components/molecules/Modal';
 import Table from '../../../components/organisms/Table';
 import {Arrays} from '../../../constans/array';
@@ -20,6 +22,7 @@ export default function UserResponded() {
   const [userSelected, setUserSelected] = useState<DataResponseUserReportedInterface>();
   const [sortingDate, setSortingDate] = useState('ASC');
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [reportId, setReportId] = useState<string | undefined>(undefined);
 
   const columns: ColumnDef<DataResponseUserReportedInterface>[] = [
     {
@@ -72,6 +75,7 @@ export default function UserResponded() {
   ];
 
   const handleRespond = (value: DataResponseUserReportedInterface) => {
+    setReportId(value.id);
     setUserSelected(value);
     setIsShowModalRespond(true);
   };
@@ -105,6 +109,19 @@ export default function UserResponded() {
   useEffect(() => {
     refetchingGetAllUser();
   }, [sortingDate, pageNumber, refetchingGetAllUser]);
+
+  const {
+    refetch: refetchingAllReporter,
+    isFetching: isFetchingReporter,
+    data: dataReporter,
+  } = useQuery(['/getAllReporter'], () => getReportsDetail({id: reportId}), {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (reportId === undefined) return;
+    refetchingAllReporter();
+  }, [refetchingAllReporter, reportId]);
 
   return (
     <div className="bg-white rounded-[10px] p-6 h-full">
@@ -154,8 +171,12 @@ export default function UserResponded() {
           <Typography fontSize={14}>Detail</Typography>
           <div className="flex items-center justify-center">
             <div className="w-[120px] text-[14px] text-gray-500">URL</div>
-            <div className="flex-1 text-[14px]">
-              {`https://app.myriad.social/post/${userSelected?.id}`}
+            <div>
+              <Typography
+                style={{
+                  fontSize: 14,
+                  flexWrap: 'wrap',
+                }}>{`https://app.myriad.social/post/${userSelected?.id}`}</Typography>
             </div>
             <a
               href={`https://app.myriad.social/post/${userSelected?.id}`}
@@ -175,25 +196,13 @@ export default function UserResponded() {
           <div className="mb-4">
             <Typography fontSize={14}>Reporter</Typography>
           </div>
-          {userSelected?.reporters.map(item => {
-            return (
-              <div key={item.id} className="mb-[24px]">
-                <div className="flex justify-between">
-                  <AvatarWithName
-                    image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
-                    name={item.reportedBy ?? ''}
-                    desc={item.id ?? ''}
-                  />
-                  <Typography fontSize={12} color={'#616161'}>
-                    16/07/22
-                  </Typography>
-                </div>
-                <Typography fontSize={14} color={'#0A0A0A'} style={{marginLeft: 48, marginTop: 1}}>
-                  {item.description}
-                </Typography>
-              </div>
-            );
-          })}
+          {isFetchingReporter ? (
+            <CircularProgress />
+          ) : (
+            dataReporter?.data?.map((item: DataResponseUserReportedInterface) => {
+              return <ListReporter data={item} key={item.id} />;
+            })
+          )}
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">

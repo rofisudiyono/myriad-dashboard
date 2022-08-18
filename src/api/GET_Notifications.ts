@@ -1,9 +1,10 @@
 import axios from './axiosInstance';
 
-export const getNotifications = async (filter: any) => {
+export const getNotifications = async ({pageNumber, filter}: {pageNumber: number; filter: any}) => {
   return axios
     .get(`/notifications`, {
       params: {
+        pageNumber: pageNumber,
         filter,
       },
     })

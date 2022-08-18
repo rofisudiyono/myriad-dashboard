@@ -13,7 +13,10 @@ const moduleExports = {
       return version;
     }
   },
-  serverRuntimeConfig: {},
+  serverRuntimeConfig: {
+    myriadAPIURL: process.env.NEXT_PUBLIC_MYRIAD_API_URL ?? 'http://localhost:3001',
+    myriadAPIKey: process.env.NEXT_PUBLIC_MYRIAD_API_KEY ?? 's3cReT',
+  },
   publicRuntimeConfig: {
     myriadAPIURL: process.env.NEXT_PUBLIC_MYRIAD_API_URL ?? 'http://localhost:3001',
     myriadAPIKey: process.env.NEXT_PUBLIC_MYRIAD_API_KEY ?? 's3cReT',

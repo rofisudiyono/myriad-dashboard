@@ -1,4 +1,4 @@
-import {Typography} from '@mui/material';
+import {CircularProgress, Typography} from '@mui/material';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {ColumnDef} from '@tanstack/react-table';
 import Image from 'next/image';
@@ -18,6 +18,8 @@ import {
 import ContentLayout from '../../../layout/ContentLayout';
 import {dateFormatter} from '../../../utils/dateFormatter';
 import {Arrays} from '../../../constans/array';
+import {getReportsDetail} from '../../../api/GET_ReportsDetail';
+import ListReporter from '../../../components/atoms/ListReporter';
 
 export default function PostResponded() {
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
@@ -26,6 +28,7 @@ export default function PostResponded() {
   const [sortingPostStatus, setSortingPostStatus] = useState('all');
   const [sortingPostType, setSortingPostType] = useState('all');
   const [pageNumber, setPageNumber] = useState(1);
+  const [reportId, setReportId] = useState<string | undefined>(undefined);
 
   const translationText = (reportType: ReportType) => {
     return ReportTypeCategoryMapper[reportType];
@@ -97,6 +100,7 @@ export default function PostResponded() {
   ];
 
   const handleRespond = (value: DataResponseUserReportedInterface) => {
+    setReportId(value.id);
     setUserSelected(value);
     setIsShowModalRespond(true);
   };
@@ -143,6 +147,19 @@ export default function PostResponded() {
   useEffect(() => {
     refetchingGetAllResponded();
   }, [sortingDate, sortingPostType, sortingPostStatus, pageNumber, refetchingGetAllResponded]);
+
+  const {
+    refetch: refetchingAllReporter,
+    isFetching: isFetchingReporter,
+    data: dataReporter,
+  } = useQuery(['/getAllReporter'], () => getReportsDetail({id: reportId}), {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (reportId === undefined) return;
+    refetchingAllReporter();
+  }, [refetchingAllReporter, reportId]);
 
   return (
     <div className="bg-white rounded-[10px] p-6 h-full">
@@ -212,10 +229,10 @@ export default function PostResponded() {
           <div className="flex items-center justify-center">
             <div className="w-[120px] text-[14px] text-gray-500">URL</div>
             <div className="flex-1 text-[14px]">
-              {`https://app.myriad.social/post/${userSelected?.id}`}
+              {`https://app.testnet.myriad.social/post/${userSelected?.id}`}
             </div>
             <a
-              href={`https://app.myriad.social/post/${userSelected?.id}`}
+              href={`https://app.testnet.myriad.social/post/${userSelected?.id}`}
               target="_blank"
               rel="noreferrer">
               <button className="w-[20px]">
@@ -232,25 +249,13 @@ export default function PostResponded() {
           <div className="mb-4">
             <Typography fontSize={14}>Reporter</Typography>
           </div>
-          {userSelected?.reporters.map(item => {
-            return (
-              <div key={item.id} className="mb-[24px]">
-                <div className="flex justify-between">
-                  <AvatarWithName
-                    image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
-                    name={item.reportedBy ?? ''}
-                    desc={item.id ?? ''}
-                  />
-                  <Typography fontSize={12} color={'#616161'}>
-                    16/07/22
-                  </Typography>
-                </div>
-                <Typography fontSize={14} color={'#0A0A0A'} style={{marginLeft: 48, marginTop: 1}}>
-                  {item.description}
-                </Typography>
-              </div>
-            );
-          })}
+          {isFetchingReporter ? (
+            <CircularProgress />
+          ) : (
+            dataReporter?.data?.map((item: DataResponseUserReportedInterface) => {
+              return <ListReporter data={item} key={item.id} />;
+            })
+          )}
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
