@@ -14,10 +14,12 @@ const moduleExports = {
     }
   },
   serverRuntimeConfig: {
+    appAuthURL: process.env.NEXTAUTH_URL ?? 'http://localhost:3000',
     myriadAPIURL: process.env.NEXT_PUBLIC_MYRIAD_API_URL ?? 'http://localhost:3001',
     myriadAPIKey: process.env.NEXT_PUBLIC_MYRIAD_API_KEY ?? 's3cReT',
   },
   publicRuntimeConfig: {
+    appAuthURL: process.env.NEXTAUTH_URL ?? 'http://localhost:3000',
     myriadAPIURL: process.env.NEXT_PUBLIC_MYRIAD_API_URL ?? 'http://localhost:3001',
     myriadAPIKey: process.env.NEXT_PUBLIC_MYRIAD_API_KEY ?? 's3cReT',
   },
