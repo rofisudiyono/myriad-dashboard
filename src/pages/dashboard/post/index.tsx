@@ -1,4 +1,4 @@
-import {Typography} from '@mui/material';
+import {CircularProgress, Typography} from '@mui/material';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {ColumnDef} from '@tanstack/react-table';
 import Image from 'next/image';
@@ -18,11 +18,14 @@ import {
 import ContentLayout from '../../../layout/ContentLayout';
 import {dateFormatter} from '../../../utils/dateFormatter';
 import {Arrays} from '../../../constans/array';
+import {getReportsDetail} from '../../../api/GET_ReportsDetail';
+import ListReporter from '../../../components/atoms/ListReporter';
 export default function PostResported() {
   const [isShowModalRespond, setIsShowModalRespond] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<DataResponseUserReportedInterface>();
   const [sortingDate, setSortingDate] = useState<string>('DESC');
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [reportId, setReportId] = useState<string | undefined>(undefined);
 
   const translationText = (reportType: ReportType) => {
     return ReportTypeCategoryMapper[reportType];
@@ -56,7 +59,7 @@ export default function PostResported() {
       size: 144,
       cell: value => (
         <Typography textTransform={'capitalize'} fontSize={14}>
-          {value.row.original.type}
+          {value.row.original.type.replace('_', ' ')}
         </Typography>
       ),
     },
@@ -88,6 +91,7 @@ export default function PostResported() {
   ];
 
   const handleRespond = (value: DataResponseUserReportedInterface) => {
+    setReportId(value.id);
     setUserSelected(value);
     setIsShowModalRespond(true);
   };
@@ -139,6 +143,19 @@ export default function PostResported() {
     refetchingGetAllPost();
   }, [sortingDate, pageNumber, refetchingGetAllPost]);
 
+  const {
+    refetch: refetchingAllReporter,
+    isFetching: isFetchingReporter,
+    data: dataReporter,
+  } = useQuery(['/getAllReporter'], () => getReportsDetail({id: reportId}), {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (reportId === undefined) return;
+    refetchingAllReporter();
+  }, [refetchingAllReporter, reportId]);
+
   return (
     <div className="bg-white rounded-[10px] p-6 h-full">
       <div className="mb-[5px]">
@@ -165,8 +182,8 @@ export default function PostResported() {
           data={dataPostReported?.data ?? []}
           columns={columns}
           meta={dataPostReported?.meta ?? []}
-          onClickNext={() => setPageNumber(dataPostReported?.meta.nextPage!)}
-          onClickPrevios={() => setPageNumber(dataPostReported?.meta.currentPage! - 1)}
+          onClickNext={() => setPageNumber(dataPostReported?.meta.nextPage ?? 1)}
+          onClickPrevios={() => setPageNumber((dataPostReported?.meta.currentPage ?? 2) - 1)}
         />
       </div>
       <Modal
@@ -208,25 +225,13 @@ export default function PostResported() {
           <div className="mb-4">
             <Typography fontSize={14}>Reporter</Typography>
           </div>
-          {userSelected?.reporters.map(item => {
-            return (
-              <div key={item.id} className="mb-[24px]">
-                <div className="flex justify-between">
-                  <AvatarWithName
-                    image={userSelected?.reportedDetail.user.profilePictureURL!}
-                    name={item.reportedBy!}
-                    desc={item.id!}
-                  />
-                  <Typography fontSize={12} color={'#616161'}>
-                    16/07/22
-                  </Typography>
-                </div>
-                <Typography fontSize={14} color={'#0A0A0A'} style={{marginLeft: 48, marginTop: 1}}>
-                  {item.description}
-                </Typography>
-              </div>
-            );
-          })}
+          {isFetchingReporter && dataReporter ? (
+            <CircularProgress />
+          ) : (
+            dataReporter?.data?.map((item: DataResponseUserReportedInterface) => {
+              return <ListReporter data={item} key={item.id} />;
+            })
+          )}
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">

@@ -12,7 +12,6 @@ const Siderbar = () => {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const [mainMenu, setMainMenu] = useState('');
-  console.log(mainMenu);
 
   const handleListItemClick = (item: NavigationInterface) => {
     router.push(item.link);
@@ -25,7 +24,6 @@ const Siderbar = () => {
 
   const getMainMenu = useCallback(() => {
     const url = router.pathname.split('/');
-    console.log('url', url);
     const dataUrl = '/' + url[1] + '/' + url[2];
     setMainMenu(dataUrl);
   }, [router.pathname]);

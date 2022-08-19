@@ -12,12 +12,7 @@ export const config = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  let headers = {};
   try {
-    headers = {
-      Authorization: `Bearer ${serverRuntimeConfig.myriadAPIKey}`,
-    };
-
     return httpProxyMiddleware(req, res, {
       target: `${serverRuntimeConfig.myriadAPIURL}`,
       pathRewrite: [
@@ -27,7 +22,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ],
       changeOrigin: true,
-      headers,
     });
   } catch (e) {
     console.log(e);

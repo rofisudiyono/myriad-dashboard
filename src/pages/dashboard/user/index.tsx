@@ -5,9 +5,11 @@ import Image from 'next/image';
 import {ReactNode, useEffect, useState} from 'react';
 import {IcOpenUrl} from '../../../../public/icons';
 import {getReports} from '../../../api/GET_Reports';
+import {getReportsDetail} from '../../../api/GET_ReportsDetail';
 import {updateReports} from '../../../api/PATCH_Reports';
 import {AvatarWithName, DropdownFilter} from '../../../components/atoms';
 import Button from '../../../components/atoms/Button';
+import ListReporter from '../../../components/atoms/ListReporter';
 import Modal from '../../../components/molecules/Modal';
 import Table from '../../../components/organisms/Table';
 import {Arrays} from '../../../constans/array';
@@ -24,6 +26,7 @@ export default function UserReported() {
   const [userSelected, setUserSelected] = useState<DataResponseUserReportedInterface>();
   const [sortingDate, setSortingDate] = useState('ASC');
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [reportId, setReportId] = useState<string | undefined>(undefined);
 
   const filter = JSON.stringify({
     where: {status: 'pending', referenceType: 'user'},
@@ -76,6 +79,7 @@ export default function UserReported() {
   ];
 
   const handleRespond = (value: DataResponseUserReportedInterface) => {
+    setReportId(value.id);
     setUserSelected(value);
     setIsShowModalRespond(true);
   };
@@ -84,9 +88,9 @@ export default function UserReported() {
     const status = 'ignored';
     const response = await mutateUpdateUserStatus({
       status,
-      reportId: userSelected?.id!,
+      reportId: userSelected?.id ?? '',
     });
-    if (response.statusCode === 401) {
+    if (response?.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
       refetchingGetAllUser();
@@ -98,9 +102,9 @@ export default function UserReported() {
     const status = 'removed';
     const response = await mutateUpdateUserStatus({
       status,
-      reportId: userSelected?.id!,
+      reportId: userSelected?.id ?? '',
     });
-    if (response.statusCode === 401) {
+    if (response?.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
       refetchingGetAllUser();
@@ -115,6 +119,19 @@ export default function UserReported() {
   } = useQuery(['/getAllUser'], () => getReports({pageNumber, filter}), {
     enabled: false,
   });
+
+  const {
+    refetch: refetchingAllReporter,
+    isFetching: isFetchingReporter,
+    data: dataReporter,
+  } = useQuery(['/getAllReporter'], () => getReportsDetail({id: reportId}), {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    if (reportId === undefined) return;
+    refetchingAllReporter();
+  }, [refetchingAllReporter, reportId]);
 
   const {mutateAsync: mutateUpdateUserStatus, isLoading} = useMutation(updateReports);
 
@@ -137,7 +154,9 @@ export default function UserReported() {
           label="Report Date"
           data={Arrays.dataFilter ?? []}
           value={sortingDate}
-          onChange={(event: any) => setSortingDate(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setSortingDate(event.target.value)
+          }
         />
       </div>
       <div className="">
@@ -146,8 +165,8 @@ export default function UserReported() {
           data={dataUserReported?.data ?? []}
           columns={columns}
           meta={dataUserReported?.meta ?? []}
-          onClickNext={() => setPageNumber(dataUserReported?.meta.nextPage!)}
-          onClickPrevios={() => setPageNumber(dataUserReported?.meta.currentPage! - 1)}
+          onClickNext={() => setPageNumber(dataUserReported?.meta.nextPage ?? 1)}
+          onClickPrevios={() => setPageNumber((dataUserReported?.meta.currentPage ?? 1) - 1)}
         />
       </div>
       <Modal
@@ -158,9 +177,9 @@ export default function UserReported() {
           <Typography fontSize={14}>Reported user</Typography>
           <div className="mt-[12px]">
             <AvatarWithName
-              image={userSelected?.reportedDetail.user.profilePictureURL!}
-              name={userSelected?.reportedDetail.user.name!}
-              desc={userSelected?.reportedDetail.user.username!}
+              image={userSelected?.reportedDetail.user.profilePictureURL ?? ''}
+              name={userSelected?.reportedDetail.user.name ?? ''}
+              desc={userSelected?.reportedDetail.user.username ?? ''}
             />
           </div>
         </div>
@@ -169,10 +188,10 @@ export default function UserReported() {
           <div className="flex items-center justify-center">
             <div className="w-[120px] text-[14px] text-gray-500">URL</div>
             <div className="flex-1 text-[14px] pr-2">
-              {`https://app.myriad.social/post/${userSelected?.id}`}
+              {`https://app.testnet.myriad.social/user/${userSelected?.id}`}
             </div>
             <a
-              href={`https://app.myriad.social/post/${userSelected?.id}`}
+              href={`https://app.testnet.myriad.social/user/${userSelected?.id}`}
               target="_blank"
               rel="noreferrer">
               <button className="w-[20px]">
@@ -189,25 +208,13 @@ export default function UserReported() {
           <div className="mb-4">
             <Typography fontSize={14}>Reporter</Typography>
           </div>
-          {userSelected?.reporters.map(item => {
-            return (
-              <div key={item.id} className="mb-[24px]">
-                <div className="flex justify-between">
-                  <AvatarWithName
-                    image={userSelected?.reportedDetail.user.profilePictureURL as string}
-                    name={item.reportedBy as string}
-                    desc={item.id as string}
-                  />
-                  <Typography fontSize={12} color={'#616161'}>
-                    16/07/22
-                  </Typography>
-                </div>
-                <Typography fontSize={14} color={'#0A0A0A'} style={{marginLeft: 48, marginTop: 1}}>
-                  {item.description}
-                </Typography>
-              </div>
-            );
-          })}
+          {isFetchingReporter ? (
+            <CircularProgress />
+          ) : (
+            dataReporter?.data?.map((item: DataResponseUserReportedInterface) => {
+              return <ListReporter data={item} key={item.id} />;
+            })
+          )}
         </div>
         <div className="flex mt-[28px]">
           <div className="flex-1 mr-3">
