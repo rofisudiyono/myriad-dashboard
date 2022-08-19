@@ -1,8 +1,5 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
-import getConfig from 'next/config';
 import httpProxyMiddleware from 'next-http-proxy-middleware';
-
-const {serverRuntimeConfig} = getConfig();
 
 export const config = {
   api: {
@@ -14,7 +11,7 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     return httpProxyMiddleware(req, res, {
-      target: `${serverRuntimeConfig.myriadAPIURL}`,
+      target: `https://api.testnet.myriad.social`,
       pathRewrite: [
         {
           patternStr: '/api',
