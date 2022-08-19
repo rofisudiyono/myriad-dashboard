@@ -95,6 +95,7 @@ jobs:
             helm upgrade myriad-dashboard myriadsocial/myriad-dashboard \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.appAuthURL=https://${{ steps.secrets.outputs.DASHBOARD_DNS }} \
               --set-string config.apiURL=${{ steps.secrets.outputs.API_URL }} \
               --set-string config.apiKey=${{ steps.secrets.outputs.API_KEY }} \
               --set ingress.enabled=true \
