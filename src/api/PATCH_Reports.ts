@@ -1,6 +1,4 @@
 import axios from './axiosInstance';
-import getConfig from 'next/config';
-const {publicRuntimeConfig} = getConfig();
 
 export const updateReports = async ({reportId, status}: {reportId: string; status: string}) => {
   return axios
@@ -12,7 +10,7 @@ export const updateReports = async ({reportId, status}: {reportId: string; statu
       },
       {
         headers: {
-          Authorization: `Bearer ${publicRuntimeConfig.myriadAPIKey}`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTU0NTExZTVkZTJkOGE4MTdkYzI2NyIsIm5hbWUiOiJNeXJpYWQgT2ZmaWNpYWwiLCJ1c2VybmFtZSI6Im15cmlhZF9vZmZpY2lhbCIsImNyZWF0ZWRBdCI6IjIwMjEtMTItMThUMjA6NDQ6MDQuMzI3WiIsInBlcm1pc3Npb25zIjpbIm1hc3RlciIsImFkbWluIiwidXNlciJdfQ.Zacem4noTZlkX4mihp67ixcr8ZzksiA8t8u7l1qpmyM`,
         },
       },
     )
