@@ -4,7 +4,7 @@ const {publicRuntimeConfig} = getConfig();
 
 export const deleteReports = async ({reportId}: {reportId: string}) => {
   return axios
-    .delete(`/reports/${reportId}`, {
+    .delete(`/api/reports/${reportId}`, {
       headers: {
         Authorization: `Bearer ${publicRuntimeConfig.myriadAPIKey}`,
       },

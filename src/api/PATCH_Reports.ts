@@ -5,7 +5,7 @@ const {publicRuntimeConfig} = getConfig();
 export const updateReports = async ({reportId, status}: {reportId: string; status: string}) => {
   return axios
     .patch(
-      `/reports/${reportId}`,
+      `/api/reports/${reportId}`,
       {
         status: status,
         updatedAt: new Date(),

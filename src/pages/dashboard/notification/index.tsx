@@ -69,7 +69,7 @@ export default function Notification() {
       </div>
 
       <div className="min-h-[350px]">
-        {!isFetching && dataNotification.toString().length === 0 && (
+        {!isFetching && dataNotification?.toString().length === 0 && (
           <div className="h-[300px] w-full flex items-center justify-center">
             <EmptyState />
           </div>
@@ -79,7 +79,7 @@ export default function Notification() {
             <CircularProgress />
           </div>
         ) : (
-          dataNotification.map((item, index) => {
+          dataNotification?.map((item, index) => {
             return (
               <ListAllNotifications
                 key={index}
