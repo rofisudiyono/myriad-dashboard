@@ -115,7 +115,7 @@ export default function PostResported() {
       status,
       reportId: userSelected?.id ?? '',
     });
-    if (response.statusCode === 401) {
+    if (response?.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
       refetchingGetAllPost();
@@ -129,7 +129,7 @@ export default function PostResported() {
       status,
       reportId: userSelected?.id ?? '',
     });
-    if (response.statusCode === 401) {
+    if (response?.statusCode === 401) {
       setIsShowModalRespond(false);
     } else {
       refetchingGetAllPost();
