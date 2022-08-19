@@ -3,7 +3,7 @@ import axios from './axiosInstance';
 export const updateReports = async ({reportId, status}: {reportId: string; status: string}) => {
   return axios
     .patch(
-      `/api/reports/${reportId}`,
+      `/reports/${reportId}`,
       {
         status: status,
         updatedAt: new Date(),

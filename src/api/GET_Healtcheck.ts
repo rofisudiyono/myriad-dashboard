@@ -2,7 +2,7 @@ import axios from './axiosInstance';
 
 export const getHealtcheck = async () => {
   return axios
-    .get(`/api/health`)
+    .get(`/health`)
     .then(() => {
       return true;
     })
