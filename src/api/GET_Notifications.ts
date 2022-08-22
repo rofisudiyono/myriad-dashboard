@@ -2,7 +2,7 @@ import axios from './axiosInstance';
 
 export const getNotifications = async ({pageNumber, filter}: {pageNumber: number; filter: any}) => {
   return axios
-    .get(`/notifications`, {
+    .get(`/api/notifications`, {
       params: {
         pageNumber: pageNumber,
         filter,

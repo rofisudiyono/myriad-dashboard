@@ -51,7 +51,7 @@ export const Arrays = {
       title: 'User comment',
     },
     {
-      value: 'report_port',
+      value: 'report_post',
       title: 'Post report',
     },
     {

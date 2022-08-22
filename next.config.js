@@ -3,7 +3,8 @@ const {version} = require('./package.json');
 
 /** @type {import('next').NextConfig} */
 
-const {NEXT_PUBLIC_APP_AUTH_URL, NEXT_PUBLIC_MYRIAD_API_URL, MYRIAD_API_KEY} = process.env;
+const {NEXT_PUBLIC_APP_AUTH_URL, NEXT_PUBLIC_MYRIAD_API_URL, NEXT_PUBLIC_MYRIAD_API_KEY} =
+  process.env;
 
 const moduleExports = {
   reactStrictMode: false,
@@ -16,7 +17,7 @@ const moduleExports = {
     }
   },
   serverRuntimeConfig: {
-    myriadAPIKey: MYRIAD_API_KEY,
+    myriadAPIKey: NEXT_PUBLIC_MYRIAD_API_KEY,
     myriadAPIURL: NEXT_PUBLIC_MYRIAD_API_URL,
   },
   publicRuntimeConfig: {
