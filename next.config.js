@@ -3,6 +3,9 @@ const {version} = require('./package.json');
 
 /** @type {import('next').NextConfig} */
 
+const {NEXT_PUBLIC_APP_AUTH_URL, NEXT_PUBLIC_MYRIAD_API_URL, NEXT_PUBLIC_MYRIAD_API_KEY} =
+  process.env;
+
 const moduleExports = {
   reactStrictMode: false,
   swcMinify: true,
@@ -14,14 +17,11 @@ const moduleExports = {
     }
   },
   serverRuntimeConfig: {
-    appAuthURL: process.env.NEXT_PUBLIC_APP_AUTH_URL ?? 'http://localhost:3000',
-    myriadAPIURL: process.env.NEXT_PUBLIC_MYRIAD_API_URL ?? 'http://localhost:3001',
-    myriadAPIKey: process.env.NEXT_PUBLIC_MYRIAD_API_KEY ?? 's3cReT',
+    myriadAPIKey: NEXT_PUBLIC_MYRIAD_API_KEY,
+    myriadAPIURL: NEXT_PUBLIC_MYRIAD_API_URL,
   },
   publicRuntimeConfig: {
-    appAuthURL: process.env.NEXT_PUBLIC_APP_AUTH_URL ?? 'http://localhost:3000',
-    myriadAPIURL: process.env.NEXT_PUBLIC_MYRIAD_API_URL ?? 'http://localhost:3001',
-    myriadAPIKey: process.env.NEXT_PUBLIC_MYRIAD_API_KEY ?? 's3cReT',
+    appAuthURL: NEXT_PUBLIC_APP_AUTH_URL,
   },
   images: {
     domains: ['i.pravatar.cc', 'firebasestorage.googleapis.com'],

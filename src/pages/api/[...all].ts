@@ -1,5 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
 import httpProxyMiddleware from 'next-http-proxy-middleware';
+import getConfig from 'next/config';
+const {serverRuntimeConfig} = getConfig();
 
 export const config = {
   api: {
@@ -7,11 +9,17 @@ export const config = {
     externalResolver: true,
   },
 };
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
+    const headers =
+      req.method === 'GET'
+        ? undefined
+        : {
+            Authorization: `Bearer ${serverRuntimeConfig.myriadAPIKey}`,
+          };
+
     return httpProxyMiddleware(req, res, {
-      target: `https://api.testnet.myriad.social`,
+      target: serverRuntimeConfig.myriadAPIURL,
       pathRewrite: [
         {
           patternStr: '/api',
@@ -19,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ],
       changeOrigin: true,
+      headers,
     });
   } catch (e) {
     console.log(e);
