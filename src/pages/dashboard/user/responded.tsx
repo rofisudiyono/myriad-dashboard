@@ -176,10 +176,10 @@ export default function UserResponded() {
                 style={{
                   fontSize: 14,
                   flexWrap: 'wrap',
-                }}>{`https://app.myriad.social/post/${userSelected?.id}`}</Typography>
+                }}>{`https://app.testnet.myriad.social/user/${userSelected?.id}`}</Typography>
             </div>
             <a
-              href={`https://app.myriad.social/post/${userSelected?.id}`}
+              href={`https://app.testnet.myriad.social/user/${userSelected?.id}`}
               target="_blank"
               rel="noreferrer">
               <button className="w-[20px]">

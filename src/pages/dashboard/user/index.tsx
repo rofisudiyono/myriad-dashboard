@@ -188,10 +188,10 @@ export default function UserReported() {
           <div className="flex items-center justify-center">
             <div className="w-[120px] text-[14px] text-gray-500">URL</div>
             <div className="flex-1 text-[14px] pr-2">
-              {`https://app.testnet.myriad.social/user/${userSelected?.id}`}
+              {`https://app.testnet.myriad.social/profile/${userSelected?.referenceId}`}
             </div>
             <a
-              href={`https://app.testnet.myriad.social/user/${userSelected?.id}`}
+              href={`https://app.testnet.myriad.social/profile/${userSelected?.referenceId}`}
               target="_blank"
               rel="noreferrer">
               <button className="w-[20px]">

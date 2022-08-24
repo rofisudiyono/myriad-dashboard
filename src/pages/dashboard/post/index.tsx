@@ -205,10 +205,10 @@ export default function PostResported() {
           <div className="flex items-center justify-center">
             <div className="w-[120px] text-[14px] text-gray-500">URL</div>
             <div className="flex-1 text-[14px]">
-              {`https://app.myriad.social/post/${userSelected?.id}`}
+              {`https://app.testnet.myriad.social/post/${userSelected?.referenceId}`}
             </div>
             <a
-              href={`https://app.myriad.social/post/${userSelected?.id}`}
+              href={`https://app.testnet.myriad.social/post/${userSelected?.referenceId}`}
               target="_blank"
               rel="noreferrer">
               <button className="w-[20px]">
